@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html ng-app="kinderhaus">
+<html ng-app="papermill">
     <head>
-        <title>Kinderhaus</title>
+        <title>Papermill</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
         <!-- Bootstrap -->
         <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
         <link href="css/yeti/bootstrap.min.css" rel="stylesheet" media="screen">
         <link href="css/app.css" rel="stylesheet" media="screen">
     </head>
     <body>
-        <nav class="navbar navbar-default navbar-fixed-top" role="navigation" ng-controller="NavBarCtrl">
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -18,34 +19,38 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <div class="navbar-brand brand" href="#">Kinderhaus</div>
+                    <div class="navbar-brand brand" href="#">Papermill</div>
                 </div>
-                <div class="navbar-collapse collapse" ng-show="isLoggedIn()">
+                <!--div class="navbar-collapse collapse" ng-show="isLoggedIn()">
                     <ul class="nav navbar-nav" ng-show="isLoggedIn()">
-                        <li ng-class="{ active: isActive('/plan')}"><a href="#/plan">Plannung</a></li>
-                        <li ng-class="{ active: isActive('/educator')}"><a href="#/educator">Erzieher</a></li>
-                        <li ng-class="{ active: isActive('/children')}"><a href="#/children">Kinder</a></li>
+                        <li ng-class="{ active: isActive('/papers')}"><a href="#/papers">Papers</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right" ng-show="isLoggedIn()">
                         <li><a class="btn btn-link" ng-click="logout()">Abmelden</a></li>
                     </ul>
-                </div>
+                </div-->
             </div>
         </nav>
 
-        <div ng-view></div>
-
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div ng-view></div>
+                </div>
+            </div>
+        </div>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="bower_components/jquery/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="bower_components/angular/angular.min.js"></script>
         <script src="bower_components/angular-route/angular-route.min.js"></script>
-        <script src="bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.min.js"></script>
+        <!--script src="bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.min.js"></script-->
 
         <!-- App stuff -->
+        <script src="app/papermill.js"></script>
+        <script src="app/modules/papers/controller/PapersCtrl.js"></script>
         <!--
-        <script src="app/kinderhaus.js"></script>
         <script src="app/services/CalendarService.js"></script>
         <script src="app/services/UserService.js"></script>
         <script src="app/controllers/SlotDetailModalCtrl.js"></script>
