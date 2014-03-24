@@ -1,0 +1,35 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+      <form class="form-horizontal">
+        <div class="modal-header">
+            <h3>Neues Paper anlegen</h3>
+        </div>
+        <div class="modal-body">
+              <fieldset>
+                <div class="form-group">
+                  <label for="Titel" class="col-lg-2 control-label">Titel</label>
+                  <div class="col-lg-10">
+                    <input type="text" class="form-control" id="inputTitle" placeholder="Titel">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="Author" class="col-lg-2 control-label">Autor</label>
+                  <div class="col-lg-10">
+                    <input type="text" class="form-control" id="inputAuthor" placeholder="Autor">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="Year" class="col-lg-2 control-label">Jahr</label>
+                  <div class="col-lg-10">
+                    <input type="number" class="form-control" id="inputYear" placeholder="Jahr">
+                  </div>
+                </div>
+              </fieldset>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+</div>

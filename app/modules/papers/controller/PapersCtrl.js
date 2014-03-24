@@ -1,6 +1,6 @@
 var app = angular.module('papermill');
 
-app.controller('PapersCtrl', ['$scope', function($scope) {
+app.controller('PapersCtrl', ['$scope', '$modal', '$log', function($scope, $modal, $log) {
     $scope.papers = [{
         title: 'Paper 1',
         author: 'Gabi Kühl',
@@ -29,4 +29,17 @@ app.controller('PapersCtrl', ['$scope', function($scope) {
         type: 'PDF',
         tags: ['Paläontolgy', 'Hunsrück', 'Schinderhannes', 'Fossils']
     }];
+
+    $scope.create = function() {
+        var modalInstance = $modal.open({
+            templateUrl: 'app/modules/papers/partials/create-paper-modal.html',
+            controller: 'CreatePaperModalCtrl'
+        });
+
+        modalInstance.result.then(function () {
+            $log.info('Modal accepted at: ' + new Date())
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
 }]);
