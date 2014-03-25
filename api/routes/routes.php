@@ -26,9 +26,7 @@ $app->get('/paper', function () use ($app) {
 
     $app->response()->header('Content-Type', 'application/json; charset=utf-8');
 
-    $e = json_encode($papers);
-    
-    echo json_encode(json_decode($e));
+    echo json_encode($papers);
 });
 
 $app->get('/setup', function() use ($app) {
