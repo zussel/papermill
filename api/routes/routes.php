@@ -2,31 +2,11 @@
 
 ORM::configure('sqlite:db/papermill.db');
 
+require_once 'models.php';
+require_once 'users.php';
+require_once 'papers.php';
+
 $app->get('/', function() {
-});
-
-$app->get('/paper', function () use ($app) {
-  
-    $papers = array(
-        array(
-            'title' => 'Paper 1',
-            'auhor' => 'Gabi Kühl',
-            'published' => array(
-                'by'=>'PaperPress',
-                'year'=> 2011
-            ),
-            'type'=> 'PDF',
-            'tags'=> array(
-                'Paläontolgy',
-                'Fossils',
-                'Kambrium'
-            )
-        )
-    );
-
-    $app->response()->header('Content-Type', 'application/json; charset=utf-8');
-
-    echo json_encode($papers);
 });
 
 $app->get('/setup', function() use ($app) {
@@ -53,8 +33,20 @@ $app->get('/setup', function() use ($app) {
                owner INTEGER,
                year INTEGER,
                title VARCHAR(256),
-               author VARCHAR(256));');
+               type INTEGER,
+               url VARCHAR(256));');
+               
+    $db->exec('CREATE TABLE IF NOT EXISTS tag (
+               id INTEGER PRIMARY KEY,
+               name VARCHAR(256));');
+               
+    $db->exec('CREATE TABLE IF NOT EXISTS paper_tag (
+              paper_id integer,
+              tag_id integer);');
 
+    $db->exec('CREATE TABLE IF NOT EXISTS paper_author (
+              paper_id integer,
+              author_id integer);');
 });
 
 ?>
