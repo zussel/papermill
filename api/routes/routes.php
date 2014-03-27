@@ -33,6 +33,7 @@ $app->get('/setup', function() use ($app) {
                owner INTEGER,
                year INTEGER,
                title VARCHAR(256),
+               author VARCHAR(256),
                type INTEGER,
                url VARCHAR(256));');
                
