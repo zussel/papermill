@@ -1,13 +1,13 @@
 {
-  "name": "php-ng-bs-seed",
+  "name": "papermill",
   "version": "0.0.1",
   "authors": [
     "Sascha Kuehl <sascha.kuehl@gmx.net>"
   ],
-  "description": "a boilerplate for a php angular and bootstrap app",
+  "description": "Keep track of all your papers",
   "main": "app.js",
   "keywords": [
-    "php angular bootstrap"
+    "php angular bootstrap papers"
   ],
   "license": "MIT",
   "private": true,
@@ -19,9 +19,9 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "~1.2.14",
-    "angular-route": "~1.2.14",
-    "angular-resource": "~1.2.14",
+    "angular": "~1.2.15",
+    "angular-route": "~1.2.15",
+    "angular-resource": "~1.2.15",
     "angular-ui-bootstrap-bower": "~0.10.0",
     "jquery": "~2.0.3",
     "bootstrap": "~3.1.1"

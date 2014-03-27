@@ -1,10 +1,5 @@
-angular.module('papermill').service.factory("Paper", function ($resource) {
-    return $resource(
-        "/api/paper/:id",
-        {
-        	id: "@id"
-        }, {
-            "update": {method: "PUT"}
-        }
-    );
+angular.module('papermill').factory("Paper", function ($resource) {
+    return $resource("/api/paper/:id", { id: "@id" }, {
+        "update": {method: "PUT"}
+    });
 });
