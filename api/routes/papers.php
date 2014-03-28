@@ -33,15 +33,16 @@ $app->group('/paper', function () use ($app) {
             $app->response->setStatus(404);
         }
     });
-    
-    $app->put('/test', function() {
-    });
 
-/*
+    /*
+     * update a paper
+     */
     $app->put('/:id', function ($id) use ($app) {
         $paper = Model::factory('Paper')->find_one($id);
         $data = $app->request()->getBody();
-        if ($data == null) {
+        if ($paper == null) {
+            $app->response->setStatus(404);
+        } else if ($data == null) {
             $app->response->setStatus(404);
         } else {
             $paper->title = $data['title'];
@@ -54,8 +55,10 @@ $app->group('/paper', function () use ($app) {
             echo json_encode($arr);
         }
     });
-*/
-/*
+
+    /*
+     * add a new paper
+     */
     $app->post('', function () use ($app) {
         $app->response()->header("Content-Type", "application/json");
         $data = $app->request()->getBody();
@@ -65,7 +68,7 @@ $app->group('/paper', function () use ($app) {
         } else {
             /*
              * parse json data
-             * /
+             */
             $paper = Model::factory('Paper')->create();
             $paper->title = $data['title'];
             $paper->year = $data['year'];
@@ -77,7 +80,10 @@ $app->group('/paper', function () use ($app) {
             echo json_encode($arr);
         }
     });
-*/
+
+    /*
+     * delete a paper
+     */
     $app->delete('/:id', function ($id) use ($app) {
         $paper = Model::factory('Paper')->find_one($id);
         if ($paper != null) {
