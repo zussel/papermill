@@ -65,15 +65,22 @@ $app->group('/paper', function () use ($app) {
 
         if ($data == null) {
             $app->response->setStatus(404);
+            echo 'data null';
         } else {
+            if (is_string($data)) {
+              $arr = json_decode($data, true);
+            } else {
+              $arr = $data;
+            }
+
             /*
              * parse json data
              */
             $paper = Model::factory('Paper')->create();
-            $paper->title = $data['title'];
-            $paper->year = $data['year'];
-            $paper->author = $data['author'];
-            $paper->url = $data['url'];
+            $paper->title = $arr['title'];
+            $paper->year = $arr['year'];
+            $paper->author = $arr['author'];
+            $paper->url = $arr['url'];
             $paper->save();
             $arr = $paper->as_array();
             $arr["year"] = intval($arr["year"]);

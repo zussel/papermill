@@ -25,21 +25,27 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
     {
         // Initialize our own copy of the slim application
         $app = new \Slim\Slim(array(
-            'version'        => '0.0.0',
-            'debug'          => false,
-            'mode'           => 'testing'
+            'version'        => '0.1.0',
+            'debug'          => true,
+            'mode'           => 'testing',
+            'log.enabled'    => true
         ));
 
+        ORM::configure('sqlite:db/test-papermill.db');
+  
         // Include our core application file
         require __DIR__ . '/../routes/routes.php';
 
         // Establish a local reference to the Slim app object
         $this->app = $app;
+
+        // setup db
+        setup_db();
     }
 
     // Abstract way to make a request to SlimPHP, this allows us to mock the
     // slim environment
-    private function request($method, $path, $formVars = array(), $optionalHeaders = array())
+    private function request($method, $path, $body = '', $optionalHeaders = array())
     {
         // Capture STDOUT
         ob_start();
@@ -48,8 +54,8 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         \Slim\Environment::mock(array_merge(array(
             'REQUEST_METHOD' => strtoupper($method),
             'PATH_INFO'      => $path,
-            'SERVER_NAME'    => 'local.dev',
-            'slim.input'     => http_build_query($formVars)
+            'SERVER_NAME'    => 'papermill.local',
+            'slim.input'     => $body
         ), $optionalHeaders));
 
         // Establish some useful references to the slim app properties

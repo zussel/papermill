@@ -16,7 +16,8 @@ class PaperTest extends Slim_Framework_TestCase
             'year' => 2014,
             'url' => '/path/to/file'
         ));
-        $this->post('paper', $paper, array('CONTENT_TYPE' => 'application/json'));
-        $this->assertEquals(200, $this->response->status());
+        
+        $this->post('/paper', $paper, array('Content-Type' => 'application/json'));
+        $this->assertEquals(200, $this->response->status());        
     }
 }
