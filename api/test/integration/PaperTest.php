@@ -10,8 +10,6 @@ class PaperTest extends Slim_Framework_TestCase
 {
     public function setUp()
     {
-        print "\nhallo setup";
-
         parent::setup();
 
         ORM::configure('sqlite::memory:');
@@ -22,8 +20,12 @@ class PaperTest extends Slim_Framework_TestCase
         $this->setup_dummy_data();
     }
 
-    public function tearDown() {
-        print "\nhallo tear down";
+    public function tearDown()
+    {
+        $db = ORM::get_db();
+
+        $db->exec('DROP TABLE user');
+        $db->exec('DROP TABLE paper');
     }
 
     public function testPost_SUCCESS()
@@ -37,33 +39,31 @@ class PaperTest extends Slim_Framework_TestCase
         
         $this->post('/paper', $paper, array('Content-Type' => 'application/json'));
         $this->assertEquals(200, $this->response->status());
-        print "\nsucceeded";
     }
 
     public function testPost_FAILURE()
     {
         $paper = json_encode(array(
-            'title' => 'Mein erstes paper',
             'author' => 'Günter Hölüp',
             'year' => 2014,
             'url' => '/path/to/file'
         ));
 
         $this->post('/paper', $paper, array('Content-Type' => 'application/json'));
-
-        print "\nbody: ".$this->response->getBody()."hhh";
-
-        $this->assertEquals(200, $this->response->status());
-        print "\nsucceeded 2";
+        $this->assertEquals(400, $this->response->status());
     }
 
-    /*
     public function testGet_SUCCESS()
     {
         $this->get('/paper/1');
         $this->assertEquals(200, $this->response->status());
     }
-    */
+
+    public function testGet_FAILURE()
+    {
+        $this->get('/paper/2');
+        $this->assertEquals(404, $this->response->status());
+    }
 
     private function setup_dummy_data() {
         $db = ORM::get_db();

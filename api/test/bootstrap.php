@@ -32,7 +32,12 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         ));
 
         // Include our core application file
-        require __DIR__ . '/../routes/routes.php';
+        require_once __DIR__ . '/../config/database.php';
+        require_once __DIR__ . '/../models/exceptions.php';
+        require_once __DIR__ . '/../models/models.php';
+        require __DIR__ . '/../routes/setup.php';
+        require __DIR__ . '/../routes/users.php';
+        require __DIR__ . '/../routes/papers.php';
 
         // Establish a local reference to the Slim app object
         $this->app = $app;

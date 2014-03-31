@@ -1,6 +1,6 @@
 var app = angular.module('papermill');
 
-app.controller('CreatePaperModalCtrl', ['$scope', '$modalInstance',	function($scope, $modalInstance) {
+app.controller('CreatePaperModalCtrl', ['$scope', '$http', '$modalInstance',	function($scope, $http, $modalInstance) {
 
 	$scope.paper = {
 		title: '',
@@ -9,6 +9,7 @@ app.controller('CreatePaperModalCtrl', ['$scope', '$modalInstance',	function($sc
 	};
 
 	$scope.ok = function () {
+
 		$modalInstance.close();
 	};
 

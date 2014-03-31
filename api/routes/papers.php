@@ -70,9 +70,14 @@ $app->group('/paper', function () use ($app) {
              * parse json data
              */
             $paper = Model::factory('Paper')->create();
-            $paper->deserialize($arr);
-            $paper->save();
-            echo $paper->serialize();
+            try {
+                $paper->deserialize($arr);
+                $paper->save();
+                echo $paper->serialize();
+            } catch (ModelException $e) {
+                $app->response->setStatus(400);
+                echo '{"error":"'.$e->getMessage().'"}';
+            }
         }
     });
 
