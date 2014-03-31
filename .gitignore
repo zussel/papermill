@@ -1,5 +1,6 @@
 bower_components
 vendor
 composer.lock
-papermill.db
+*.db
+*.sqlite
 .idea

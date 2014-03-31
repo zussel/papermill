@@ -14,14 +14,18 @@ function setup_db() {
     
     $db->exec('CREATE TABLE IF NOT EXISTS user (
                id INTEGER PRIMARY KEY,
-               first_name VARCHAR(256),
-               last_name VARCHAR(256),
                email VARCHAR(256),
                passwd VARCHAR(256));');
 
+    $db->exec('CREATE TABLE IF NOT EXISTS author (
+               id INTEGER PRIMARY KEY,
+               user_id INTEGER,
+               first_name VARCHAR(256),
+               last_name VARCHAR(256))');
+
     $db->exec('CREATE TABLE IF NOT EXISTS paper (
                id INTEGER PRIMARY KEY,
-               owner INTEGER,
+               user_id INTEGER,
                year INTEGER,
                title VARCHAR(256),
                author VARCHAR(256),

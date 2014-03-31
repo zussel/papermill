@@ -26,9 +26,7 @@ $app->group('/paper', function () use ($app) {
         $app->response()->header("Content-Type", "application/json");
         $paper = Model::factory('Paper')->find_one($id);
         if ($paper != null) {
-            $arr = $paper->as_array();
-            $arr["year"] = intval($arr["year"]);
-            echo json_encode($arr);
+            echo $paper->serialize();
         } else {
             $app->response->setStatus(404);
         }
@@ -45,14 +43,9 @@ $app->group('/paper', function () use ($app) {
         } else if ($data == null) {
             $app->response->setStatus(404);
         } else {
-            $paper->title = $data['title'];
-            $paper->year = $data['year'];
-            $paper->author = $data['author'];
-            $paper->url = $data['url'];
+            $paper->deserialze($data);
             $paper->save();
-            $arr = $paper->as_array();
-            $arr["year"] = intval($arr["year"]);
-            echo json_encode($arr);
+            echo $paper->serialize();
         }
     });
 
@@ -77,14 +70,9 @@ $app->group('/paper', function () use ($app) {
              * parse json data
              */
             $paper = Model::factory('Paper')->create();
-            $paper->title = $arr['title'];
-            $paper->year = $arr['year'];
-            $paper->author = $arr['author'];
-            $paper->url = $arr['url'];
+            $paper->deserialize($arr);
             $paper->save();
-            $arr = $paper->as_array();
-            $arr["year"] = intval($arr["year"]);
-            echo json_encode($arr);
+            echo $paper->serialize();
         }
     });
 
