@@ -16,14 +16,16 @@
           <th>Autor</th>
           <th>Jahr</th>
           <th>Titel</th>
+          <th>Datei</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="paper in papers">
           <td>{{$index+1}}</td>
           <td>{{paper.author}}</td>
-          <td>{{paper.published.year}}</td>
+          <td>{{paper.year}}</td>
           <td>{{paper.title}}</td>
+          <td>{{paper.url}}</td>
         </tr>
       </tbody>
     </table>

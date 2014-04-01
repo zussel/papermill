@@ -1,6 +1,14 @@
 var app = angular.module('papermill');
 
-app.controller('PapersCtrl', ['$scope', '$modal', '$log', function($scope, $modal, $log) {
+app.controller('PapersCtrl', ['$scope', '$modal', '$http', '$log', function($scope, $modal, $http, $log) {
+
+    $http.get('/api/paper').success(function(response) {
+        $scope.papers = response;
+    }).error(function(response) {
+        console.log("failure");
+    });
+
+    /*
     $scope.papers = [{
         title: 'Paper 1',
         author: 'Gabi Kühl',
@@ -29,6 +37,7 @@ app.controller('PapersCtrl', ['$scope', '$modal', '$log', function($scope, $moda
         type: 'PDF',
         tags: ['Paläontolgy', 'Hunsrück', 'Schinderhannes', 'Fossils']
     }];
+    */
 
     $scope.create = function() {
         var modalInstance = $modal.open({
