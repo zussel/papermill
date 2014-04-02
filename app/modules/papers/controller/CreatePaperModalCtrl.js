@@ -1,19 +1,23 @@
 var app = angular.module('papermill');
 
-app.controller('CreatePaperModalCtrl', ['$scope', '$http', '$modalInstance',	function($scope, $http, $modalInstance) {
+app.controller('CreatePaperModalCtrl', [
+    '$scope', '$http', '$modalInstance', 'Paper',
+    function($scope, $http, $modalInstance, Paper) {
 
-	$scope.paper = {
-		title: '',
-		author: '',
-		year: 2014
-	};
+        $scope.paper = {};
 
-	$scope.ok = function () {
+        $scope.ok = function () {
 
-		$modalInstance.close();
-	};
+            Paper.save({}, $scope.paper, function() {
+                console.log('success');
+            }, function() {
+                console.log('failure');
+            });
+            $modalInstance.close();
+        };
 
-	$scope.cancel = function () {
-    	$modalInstance.dismiss('cancel');
-  	};
-}]);
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    }
+]);
