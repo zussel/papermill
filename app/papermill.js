@@ -1,4 +1,10 @@
-var papermill = angular.module('papermill', ['ngRoute', 'ngResource', 'ui.bootstrap.modal', 'angularFileUpload'])
+var papermill = angular.module('papermill', [
+    'ngRoute',
+    'ngResource',
+    'ui.bootstrap.modal',
+    'angularFileUpload',
+    'ngTagsInput'
+]);
 
 papermill.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/', {

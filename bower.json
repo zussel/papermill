@@ -24,6 +24,7 @@
         "angular-resource": "~1.2.15",
         "angular-ui-bootstrap-bower": "~0.10.0",
         "angular-file-upload": "~0.4.1",
+	"ng-tags-input": "2.0.0",
         "jquery": "~2.0.3",
         "bootstrap": "~3.1.1"
     }

@@ -5,3 +5,10 @@ body {
 .modal {
     display: block;
 }
+
+.yeti .tags .tag-item {
+    border-radius: 0;
+    background: #008cba;
+    border: 1px solid #0079a1;
+    color: #ffffff;
+}
