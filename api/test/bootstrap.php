@@ -30,14 +30,19 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
             'mode'           => 'testing',
             'log.enabled'    => true
         ));
-
         // Include our core application file
         require_once __DIR__ . '/../config/database.php';
         require_once __DIR__ . '/../models/exceptions.php';
         require_once __DIR__ . '/../models/models.php';
+
+        require_once __DIR__ . '/../middleware/JWTAuthMiddleware.php';
+
         require __DIR__ . '/../routes/setup.php';
         require __DIR__ . '/../routes/users.php';
         require __DIR__ . '/../routes/papers.php';
+
+        $app->add(new \Slim\Middleware\ContentTypes());
+        $app->add(new \JWTAuthMiddleware());
 
         // Establish a local reference to the Slim app object
         $this->app = $app;
