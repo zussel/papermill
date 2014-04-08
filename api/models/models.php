@@ -36,3 +36,22 @@ class Paper extends Model {
         }
     }
 };
+
+class User extends Model {
+    public function serialize() {
+        return json_encode($this->as_array());
+    }
+
+    public function deserialize($json) {
+        if (array_key_exists('email', $json)) {
+            $this->email = $json['email'];
+        } else {
+            throw new ModelException('couldn\'t find field \'email\'');
+        }
+        if (array_key_exists('passwd', $json)) {
+            $this->passwd = $json['passwd'];
+        } else {
+            throw new ModelException('couldn\'t find field \'passwd\'');
+        }
+    }
+}

@@ -13,11 +13,12 @@ class PaperTest extends Slim_Framework_TestCase
         parent::setup();
 
         ORM::configure('sqlite::memory:');
-//        ORM::configure('sqlite:db/test_papermill.sqlite');
 
         setup_db();
 
         $this->setup_dummy_data();
+
+        
     }
 
     public function tearDown()

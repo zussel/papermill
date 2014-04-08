@@ -39,6 +39,7 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
 
         require __DIR__ . '/../routes/setup.php';
         require __DIR__ . '/../routes/users.php';
+        require __DIR__ . '/../routes/auth.php';
         require __DIR__ . '/../routes/papers.php';
 
         $app->add(new \Slim\Middleware\ContentTypes());

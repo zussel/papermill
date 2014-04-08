@@ -26,7 +26,8 @@ function setup_db() {
                id INTEGER PRIMARY KEY,
                user_id INTEGER,
                first_name VARCHAR(256),
-               last_name VARCHAR(256))');
+               last_name VARCHAR(256),
+               active INTEGER);');
 
     $db->exec('CREATE TABLE IF NOT EXISTS paper (
                id INTEGER PRIMARY KEY,
