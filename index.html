@@ -11,7 +11,7 @@
         <link href="css/app.css" rel="stylesheet" media="screen">
     </head>
     <body>
-        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <nav ng-controller="UserCtrl" class="navbar navbar-default navbar-fixed-top" role="navigation">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -55,6 +55,8 @@
         <script src="app/papermill.js"></script>
         <script src="app/modules/papers/controller/CreatePaperModalCtrl.js"></script>
         <script src="app/modules/papers/controller/PapersCtrl.js"></script>
+        <script src="app/modules/auth/services/Auth.js"></script>
+        <script src="app/modules/auth/controller/UserCtrl.js"></script>
         <script src="app/modules/papers/services/Paper.js"></script>
         <script src="app/modules/login/controller/LoginCtrl.js"></script>
     </body>

@@ -12,3 +12,8 @@ body {
     border: 1px solid #0079a1;
     color: #ffffff;
 }
+
+.panel-login {
+    max-width: 400px;
+    margin: 40px auto;
+}
