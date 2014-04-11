@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('papermill').factory("AuthService", function ($q) {
+angular.module('papermill').factory("AuthService", function ($q, $http) {
     var user = {
         authenticated: false,
         id: null,
@@ -9,7 +9,15 @@ angular.module('papermill').factory("AuthService", function ($q) {
 
     return {
         login: function(credentials) {
-
+            $http.post('/api/auth/login', credentials).success(function(data) {
+                /*
+                 * login successfull
+                 * store token and user
+                 */
+                $location.path('/');
+            }).error(function(data) {
+                console.log('couldn\'t login');
+            });
         },
         logout: function() {
 
