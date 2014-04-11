@@ -1,6 +1,8 @@
 <?php
 require 'vendor/autoload.php';
 
+require 'middleware/JWTAuthMiddleware.php';
+
 $app = new \Slim\Slim();
 $app->add(new \Slim\Middleware\ContentTypes());
 $app->add(new \JWTAuthMiddleware());
