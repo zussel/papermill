@@ -1,0 +1,48 @@
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-sm-7">
+            <h1>Jumbotron</h1>
+            <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+            <p><a class="btn btn-primary btn-lg">Learn more</a></p>
+        </div>
+        <div class="col-sm-5">
+            <div class="panel panel-login panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Bitte anmelden</h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal" ng-submit="signin()" role="form">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                                    <input type="email" class="form-control" placeholder="Name" ng-model="profile.name" required autofocus>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+                                    <input type="email" class="form-control" placeholder="Email" ng-model="profile.email" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                                    <input type="password" class="form-control" placeholder="Passwort" ng-model="profile.passwd" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="pull-right btn btn-sm btn-primary" type="submit">Registrieren</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -14,7 +14,8 @@ papermill.config(['$routeProvider', function($routeProvider) {
     };
 
     $routeProvider.when('/', {
-        redirectTo: '/papers'
+        templateUrl: 'app/modules/login/partials/signin.html',
+        controller: 'SigninCtrl'
     }).when('/papers', {
         templateUrl: 'app/modules/papers/partials/papers.html',
         controller: 'PapersCtrl',
