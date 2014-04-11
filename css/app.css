@@ -17,3 +17,9 @@ body {
     max-width: 400px;
     margin: 40px auto;
 }
+
+.navbar-form .form-control {
+    display: inline-block;
+    width: auto !important; /*This is the issue*/
+    vertical-align: middle;
+}
