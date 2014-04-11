@@ -22,7 +22,17 @@
                     </button>
                     <div class="navbar-brand brand" href="#">Papermill</div>
                 </div>
-                <!--div class="navbar-collapse collapse" ng-show="isLoggedIn()">
+                <div class="navbar-collapse collapse">
+                    <form class="navbar-form navbar-right" role="form">
+                        <div class="form-group">
+                            <input class="input-sm" type="text" placeholder="Email" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <input class="input-sm" type="password" placeholder="Password" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-xs  btn-success">Anmelden</button>
+                    </form>
+                </div>                <!--div class="navbar-collapse collapse" ng-show="isLoggedIn()">
                     <ul class="nav navbar-nav" ng-show="isLoggedIn()">
                         <li ng-class="{ active: isActive('/papers')}"><a href="#/papers">Papers</a></li>
                     </ul>
