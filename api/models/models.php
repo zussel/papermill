@@ -14,25 +14,13 @@ class Paper extends Model {
      * deserialze from a json object
      */
     public function deserialize($json) {
-        if (array_key_exists('title', $json)) {
-            $this->title = $json['title'];
-        } else {
-            throw new ModelException('couldn\'t find field \'title\'');
-        }
-        if (array_key_exists('title', $json)) {
-            $this->year = $json['year'];
-        } else {
-            throw new ModelException('couldn\'t find field \'year\'');
-        }
-        if (array_key_exists('title', $json)) {
-            $this->author = $json['author'];
-        } else {
-            throw new ModelException('couldn\'t find field \'author\'');
-        }
-        if (array_key_exists('title', $json)) {
-            $this->url = $json['url'];
-        } else {
-            throw new ModelException('couldn\'t find field \'url\'');
+        $fields = array('title', 'year', 'author');
+        foreach($fields as $field) {
+            if (array_key_exists($field, $json)) {
+                $this->$field = $json[$field];
+            } else {
+                throw new ModelException('couldn\'t find field \''.$field.'\'');
+            }
         }
     }
 };
@@ -43,15 +31,13 @@ class User extends Model {
     }
 
     public function deserialize($json) {
-        if (array_key_exists('email', $json)) {
-            $this->email = $json['email'];
-        } else {
-            throw new ModelException('couldn\'t find field \'email\'');
-        }
-        if (array_key_exists('passwd', $json)) {
-            $this->passwd = $json['passwd'];
-        } else {
-            throw new ModelException('couldn\'t find field \'passwd\'');
+        $fields = array('email', 'passwd');
+        foreach($fields as $field) {
+            if (array_key_exists($field, $json)) {
+                $this->$field = $json[$field];
+            } else {
+                throw new ModelException('couldn\'t find field \''.$field.'\'');
+            }
         }
     }
 }
