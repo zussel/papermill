@@ -1,47 +1,31 @@
 <!DOCTYPE html>
 <html ng-app="papermill">
-    <head>
-        <title>Papermill</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta charset="utf-8">
-        <!-- Bootstrap -->
-        <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
-        <link href="bower_components/ng-tags-input/ng-tags-input.min.css" rel="stylesheet" media="screen">
-        <link href="css/yeti/bootstrap.min.css" rel="stylesheet" media="screen">
-        <link href="css/app.css" rel="stylesheet" media="screen">
-    </head>
-    <body>
-        <nav ng-controller="UserCtrl" class="navbar navbar-default navbar-fixed-top" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <div class="navbar-brand brand" href="#">Papermill</div>
-                </div>
-                <div class="navbar-collapse collapse">
-                    <form class="navbar-form navbar-right" role="form">
-                        <div class="form-group" style="display:inline;">
-                            <div class="input-group">
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-                                <input type="email" class="form-control" placeholder="Email" ng-model="profile.email" required>
-                            </div>                        </div>
-                        <div class="form-group">
-                            <input class="input-sm" type="password" placeholder="Password" class="form-control">
-                        </div>
-                        <button type="submit" class="btn btn-xs  btn-success">Anmelden</button>
-                    </form>
-                </div>                <!--div class="navbar-collapse collapse" ng-show="isLoggedIn()">
-                    <ul class="nav navbar-nav" ng-show="isLoggedIn()">
-                        <li ng-class="{ active: isActive('/papers')}"><a href="#/papers">Papers</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right" ng-show="isLoggedIn()">
-                        <li><a class="btn btn-link" ng-click="logout()">Abmelden</a></li>
-                    </ul>
-                </div-->
+<head>
+    <title>Papermill</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <!-- Bootstrap -->
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="bower_components/ng-tags-input/ng-tags-input.min.css" rel="stylesheet" media="screen">
+    <link href="css/yeti/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/app.css" rel="stylesheet" media="screen">
+</head>
+<body>
+    <nav ng-controller="UserCtrl" class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand brand" href="#">Papermill</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li ng-class="{active: isActive('/login')}"><a href="#/login">Anmelden</a></li>
+                </ul>            
             </div>
         </nav>
 
@@ -72,4 +56,4 @@
         <script src="app/modules/papers/services/Paper.js"></script>
         <script src="app/modules/login/controller/LoginCtrl.js"></script>
     </body>
-</html>
+    </html>

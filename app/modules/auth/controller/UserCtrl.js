@@ -10,4 +10,8 @@ app.controller('UserCtrl', ['$scope', '$location', function($scope, $location) {
         console.log("failed to change routes");
         $location.path('/login');
     });
+
+    $scope.isActive = function(path) {
+    	return $location.path().substr(0, path.length) === path;
+    };
 }]);
