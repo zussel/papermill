@@ -94,7 +94,26 @@ $app->group('/auth', function () use ($app) {
                 $app->response->setStatus(404);
                 echo '{"error":"user already exists"}';
             } else {
+                /*
+                 * create user and author
+                 * return success and user
+                 */
+                $user = Model::factory('User')->create();
+                try {
+                    $user->deserialize($arr);
+                    $user->save();
 
+                    $arr['user_id'] = $user->id;
+
+                    $author = Model::factory('Author')->create();
+                    $author->deserialize($arr);
+                    $author->save();
+
+                    echo $user->serialize();
+                } catch (ModelException $e) {
+                    $app->response->setStatus(400);
+                    echo '{"error":"'.$e->getMessage().'"}';
+                }
             }
         }
     });

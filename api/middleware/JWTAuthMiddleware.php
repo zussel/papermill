@@ -24,7 +24,7 @@ class JWTAuthMiddleware extends \Slim\Middleware
              * TODO: handle login when already logged in
              *       or on signin page
              */
-        } else if ($path != "/auth/login" && $auth == null) {
+        } else if ($path != "/auth/login" && $path != "/auth/signin" && $auth == null) {
             // not authenticated: return 401
             $this->app->response()->status(401);
         } else {

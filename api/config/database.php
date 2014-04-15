@@ -25,6 +25,7 @@ function setup_db() {
     $db->exec('CREATE TABLE IF NOT EXISTS author (
                id INTEGER PRIMARY KEY,
                user_id INTEGER,
+               name VARCHAR(256),
                first_name VARCHAR(256),
                last_name VARCHAR(256),
                active INTEGER);');
@@ -34,7 +35,6 @@ function setup_db() {
                user_id INTEGER,
                year INTEGER,
                title VARCHAR(256),
-               author VARCHAR(256),
                type INTEGER,
                url VARCHAR(256));');
 
@@ -46,7 +46,7 @@ function setup_db() {
               paper_id integer,
               tag_id integer);');
 
-    $db->exec('CREATE TABLE IF NOT EXISTS paper_author (
-              paper_id integer,
-              author_id integer);');
+    $db->exec('CREATE TABLE IF NOT EXISTS author_paper (
+              author_id integer,
+              paper_id integer);');
 }
