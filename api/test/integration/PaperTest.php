@@ -23,10 +23,7 @@ class PaperTest extends Slim_Framework_TestCase
 
     public function tearDown()
     {
-        $db = ORM::get_db();
-
-        $db->exec('DROP TABLE user');
-        $db->exec('DROP TABLE paper');
+        drop_db();
     }
 
     public function testPost_SUCCESS()

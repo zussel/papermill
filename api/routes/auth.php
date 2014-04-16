@@ -35,7 +35,8 @@ $app->group('/auth', function () use ($app) {
                 /*
                  * check password
                  */
-                if ($user->passwd != $arr['passwd']) {
+                $hashed = sha1($arr['passwd'] . $user->passwd_salt);
+                if ($user->passwd != $hashed) {
                     $app->response->setStatus(400);
                     echo '{"error":"invalid password"}';
                 } else {
@@ -46,7 +47,8 @@ $app->group('/auth', function () use ($app) {
                      */
                     $expiry = 24 * 60 * 60;
                     $key = 'secret';
-                    $token = $user->as_array();
+                    $token['email'] = $user->email;
+                    $token['id'] = $user->id;
                     $token['iss'] = 'papermill';
                     $token['exp'] = time() + $expiry;
 
@@ -101,6 +103,11 @@ $app->group('/auth', function () use ($app) {
                 $user = Model::factory('User')->create();
                 try {
                     $user->deserialize($arr);
+                    /*
+                     * handle password separately
+                     */
+                    $user->passwd_salt = openssl_random_pseudo_bytes(16);
+                    $user->passwd = sha1($arr['passwd'] . $user->passwd_salt);
                     $user->save();
 
                     $arr['user_id'] = $user->id;
@@ -118,6 +125,16 @@ $app->group('/auth', function () use ($app) {
         }
     });
 
+    /**
+     * Confirm the new user
+     */
+    $app->get('/confirm', function() use ($app) {
+
+    });
+
+    /**
+     * Logout the given user
+     */
     $app->put('/logout', function () use ($app) {
 
     });

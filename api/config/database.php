@@ -20,7 +20,9 @@ function setup_db() {
     $db->exec('CREATE TABLE IF NOT EXISTS user (
                id INTEGER PRIMARY KEY,
                email VARCHAR(256),
-               passwd VARCHAR(256));');
+               passwd CHAR(40),
+               passwd_salt BLOB);');
+//               passwd_salt CHAR(32));');
 
     $db->exec('CREATE TABLE IF NOT EXISTS author (
                id INTEGER PRIMARY KEY,
@@ -49,4 +51,27 @@ function setup_db() {
     $db->exec('CREATE TABLE IF NOT EXISTS author_paper (
               author_id integer,
               paper_id integer);');
+}
+
+function clear_tables()
+{
+    $db = ORM::get_db();
+
+    $db->exec('DELETE FROM user');
+    $db->exec('DELETE FROM author');
+    $db->exec('DELETE FROM paper');
+    $db->exec('DELETE FROM tag');
+    $db->exec('DELETE FROM paper_tag');
+    $db->exec('DELETE FROM author_paper');
+}
+
+function drop_db() {
+    $db = ORM::get_db();
+
+    $db->exec('DROP TABLE user');
+    $db->exec('DROP TABLE author');
+    $db->exec('DROP TABLE paper');
+    $db->exec('DROP TABLE tag');
+    $db->exec('DROP TABLE paper_tag');
+    $db->exec('DROP TABLE author_paper');
 }

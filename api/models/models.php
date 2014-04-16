@@ -55,11 +55,12 @@ class AuthorPaper extends Model {
 
 class User extends Model {
     public function serialize() {
+        // TODO: exclude password and salt
         return json_encode($this->as_array());
     }
 
     public function deserialize($json) {
-        $fields = array('email', 'passwd');
+        $fields = array('email');
         foreach($fields as $field) {
             if (array_key_exists($field, $json)) {
                 $this->$field = $json[$field];

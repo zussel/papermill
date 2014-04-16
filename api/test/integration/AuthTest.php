@@ -13,7 +13,6 @@ class AuthTest extends Slim_Framework_TestCase
         parent::setup();
 
         ORM::configure('sqlite::memory:');
-//        ORM::configure('sqlite:db/test_papermill.sqlite');
 
         setup_db();
 
@@ -22,11 +21,15 @@ class AuthTest extends Slim_Framework_TestCase
 
     public function tearDown()
     {
-        $db = ORM::get_db();
-
-        $db->exec('DROP TABLE user');
-        $db->exec('DROP TABLE paper');
+        drop_db();
     }
+
+    /*
+    public function testPost_Signin_SUCCESS()
+    {
+
+    }
+    */
 
     public function testPost_Login_SUCCESS()
     {
