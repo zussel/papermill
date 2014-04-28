@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('papermill').factory("AuthService", function ($q, $http) {
+angular.module('papermill').factory("AuthService", function ($q, $http, $location) {
     var user = {
         authenticated: false,
         id: null,
@@ -15,7 +15,7 @@ angular.module('papermill').factory("AuthService", function ($q, $http) {
                      * login successfull
                      * store token and user
                      */
-                    $location.path('/');
+                    $location.path('/papers');
                 })
                 .error(function(data) {
                     console.log('couldn\'t login');
