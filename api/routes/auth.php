@@ -76,7 +76,7 @@ $app->group('/auth', function () use ($app) {
         $data = $app->request()->getBody();
 
         if ($data == null) {
-            $app->response->setStatus(404);
+            $app->response->setStatus(401);
             echo '{"error": "no credentials"}';
         } else {
             if (is_string($data)) {
@@ -93,7 +93,7 @@ $app->group('/auth', function () use ($app) {
                 /*
                  * user exists response error
                  */
-                $app->response->setStatus(404);
+                $app->response->setStatus(401);
                 echo '{"error":"user already exists"}';
             } else {
                 /*
