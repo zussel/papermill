@@ -20,16 +20,24 @@ class JWTAuthMiddleware extends \Slim\Middleware
         $auth = $this->app->request->headers->get('Authorization');
 
         if (($path == "/auth/login" || $path="/auth/signin") && $auth != null) {
-            /*
-             * TODO: handle login when already logged in
-             *       or on signin page
-             */
+            // not allowed
+            $this->app->response()->status(405);
         } else if ($path != "/auth/login" && $path != "/auth/signin" && $auth == null) {
-            // not authenticated: return 401
+            // not authenticated
             $this->app->response()->status(401);
         } else {
-            // TODO: check auth
-            $this->next->call();
+            try {
+                $payload = JWT::decode($auth, 'secret');
+                // check aud
+                if (!$payload['aud'] || $payload['aud'] != 'papermill') {
+                    $this->app->response()->status(401);
+                }
+                $this->next->call();
+            } catch (UnexpectedValueException $ex) {
+                $this->app->response()->status(401);
+            } catch (DomainException $ex) {
+                $this->app->response()->status(401);
+            }
         }
     }
 }
