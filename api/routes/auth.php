@@ -49,7 +49,7 @@ $app->group('/auth', function () use ($app) {
                     $key = 'secret';
                     $token['email'] = $user->email;
                     $token['id'] = $user->id;
-                    $token['iss'] = 'papermill';
+                    $token['aud'] = 'papermill';
                     $token['exp'] = time() + $expiry;
 
                     $jwt = JWT::encode($token, $key);
