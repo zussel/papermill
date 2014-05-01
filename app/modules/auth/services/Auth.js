@@ -28,7 +28,7 @@ angular.module('papermill').factory("AuthService", function ($q, $http, $locatio
             console.log(profile);
             $http.post('/api/auth/signin', profile)
                 .success(function(data) {
-                    $location.path('/');
+                    $location.path('/login');
                 })
                 .error(function(data) {
                     console.log(data);
