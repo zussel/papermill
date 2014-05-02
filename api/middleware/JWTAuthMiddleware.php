@@ -8,6 +8,8 @@
 
 class JWTAuthMiddleware extends \Slim\Middleware
 {
+    var $special_paths = array("/auth/login", "/auth/signin", "/setup");
+
     public function call()
     {
         /*
@@ -19,10 +21,14 @@ class JWTAuthMiddleware extends \Slim\Middleware
          */
         $auth = $this->app->request->headers->get('Authorization');
 
-        if (($path == "/auth/login" || $path="/auth/signin") && $auth != null) {
-            // not allowed
-            $this->app->response()->status(405);
-        } else if ($path != "/auth/login" && $path != "/auth/signin" && $auth == null) {
+        if (in_array($path, $this->special_paths)) {
+            if ($auth != null) {
+                // not allowed
+                $this->app->response()->status(405);
+            } else {
+                $this->next->call();
+            }
+        } else if ($auth == null) {
             // not authenticated
             $this->app->response()->status(401);
         } else {
