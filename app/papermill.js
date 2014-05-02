@@ -31,6 +31,14 @@ papermill.config(['$routeProvider', function($routeProvider) {
 papermill.config(['$httpProvider', function($httpProvider) {
     $httpProvider.interceptors.push(function($q, $location) {
         return {
+            'request': function(request) {
+                request.headers = request.headers || {};
+                if ($window.sessionStorage.token) {
+//                    request.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+                    request.headers.Authorization = $window.sessionStorage.token;
+                }
+                return request;
+            },
             'response': function (response) {
                 // do something on success
                 return response;
