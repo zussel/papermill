@@ -8,7 +8,13 @@
 
 class JWTAuthMiddleware extends \Slim\Middleware
 {
-    var $special_paths = array("/auth/login", "/auth/signin", "/setup");
+    /**
+	 * Regular expression to extract token from the HTTP headers
+	 * @var string
+	 */
+	protected $bearerTokenRegEx = '#Bearer\s(\S+)#';
+	
+	var $special_paths = array("/auth/login", "/auth/signin", "/setup");
 
     public function call()
     {
