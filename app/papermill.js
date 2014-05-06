@@ -29,7 +29,7 @@ papermill.config(['$routeProvider', function($routeProvider) {
 }]);
 
 papermill.config(['$httpProvider', function($httpProvider) {
-    $httpProvider.interceptors.push(function($q, $location) {
+    $httpProvider.interceptors.push(function($q, $location, $window) {
         return {
             'request': function(request) {
                 request.headers = request.headers || {};

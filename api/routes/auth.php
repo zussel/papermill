@@ -54,7 +54,7 @@ $app->group('/auth', function () use ($app) {
 
                     $jwt = JWT::encode($token, $key);
 
-                    echo '{ "token": "'.$jwt.'"}';
+                    echo '{ "token": "'.$jwt.'", "id": '.$user->id.' }';
                 }
 
             } else {
