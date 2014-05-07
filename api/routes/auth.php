@@ -135,7 +135,7 @@ $app->group('/auth', function () use ($app) {
     /**
      * Logout the given user
      */
-    $app->put('/logout', function () use ($app) {
+    $app->get('/logout/:id', function ($id) use ($app) {
 
     });
 });

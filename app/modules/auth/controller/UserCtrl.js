@@ -18,4 +18,12 @@ app.controller('UserCtrl', ['$scope', '$location', 'AuthService', function($scop
     $scope.loggedIn = function() {
         return AuthService.loggedIn();
     };
+
+    $scope.logout = function() {
+        AuthService.logout();
+    };
+
+    $scope.user = function() {
+        return AuthService.user;
+    };
 }]);

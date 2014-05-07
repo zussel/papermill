@@ -29,6 +29,7 @@ angular.module('papermill').factory("AuthService", function ($q, $http, $locatio
                     user.id = null;
                     user.profile = null;
                     $window.sessionStorage.token = null;
+                    $location.path('/');
                 })
                 .error(function() {
                     console.log('couldn\'t logout');
@@ -46,7 +47,7 @@ angular.module('papermill').factory("AuthService", function ($q, $http, $locatio
                 });
         },
         loggedIn: function() {
-            return user.id != 0;
+            return user.id !== null;
         },
         isAuthenticated: function () {
             var defer = $q.defer();

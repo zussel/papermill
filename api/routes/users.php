@@ -17,6 +17,7 @@ $app->group('/user', function () use ($app) {
      * get user by id
      */
     $app->get('/:id', function ($id) use ($app) {
+        $app->response()->header("Content-Type", "application/json");
         $user = Model::factory('User')->find_one($id);
         if ($user != null) {
             echo json_encode($user->as_array());
