@@ -4,7 +4,7 @@
 
 var app = angular.module('papermill');
 
-app.controller('UserCtrl', ['$scope', '$location', function($scope, $location) {
+app.controller('UserCtrl', ['$scope', '$location', 'AuthService', function($scope, $location, AuthService) {
     $scope.$root.$on("$routeChangeError", function () {
 
         console.log("failed to change routes");
@@ -13,5 +13,9 @@ app.controller('UserCtrl', ['$scope', '$location', function($scope, $location) {
 
     $scope.isActive = function(path) {
     	return $location.path().substr(0, path.length) === path;
+    };
+
+    $scope.loggedIn = function() {
+        return AuthService.loggedIn();
     };
 }]);

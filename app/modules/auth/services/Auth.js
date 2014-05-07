@@ -45,6 +45,9 @@ angular.module('papermill').factory("AuthService", function ($q, $http, $locatio
                     console.log(data);
                 });
         },
+        loggedIn: function() {
+            return user.id != 0;
+        },
         isAuthenticated: function () {
             var defer = $q.defer();
             if (user.id && user.profile) {

@@ -45,8 +45,7 @@ class JWTAuthMiddleware extends \Slim\Middleware
                 $auth = $headers['Authorization'];
                 $payload = JWT::decode($auth, 'secret');
                 // check aud
-                var_dump($payload);
-                if (!$payload['aud'] || $payload['aud'] != 'papermill') {
+                if (empty($payload->aud) || $payload->aud != 'papermill') {
                     $this->app->response()->status(401);
                     $this->app->response()->body(json_encode(array('error' => 'invalid aud')));
                 } else {
