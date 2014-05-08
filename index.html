@@ -26,7 +26,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li ng-show="!loggedIn()" ng-class="{active: isActive('/login')}"><a href="#/login">Anmelden</a></li>
                     <li ng-show="loggedIn()" ng-class="{active: isActive('/logout')}"><a href ng-click="logout()">Abmelden</a></li>
-                    <li ng-show="loggedIn()"><a href="#/logout">{{user().email}}</a></li>
+                    <li ng-show="loggedIn()"><a href="#/logout">{{user().profile.email}}</a></li>
                 </ul>
             </div>
         </nav>

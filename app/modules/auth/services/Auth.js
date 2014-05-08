@@ -17,6 +17,7 @@ angular.module('papermill').factory("AuthService", function ($q, $http, $locatio
                      */
                     user.id = data.id;
                     $window.sessionStorage.token = data.token;
+                    //var u = angular.fromJson($window.atob(data.token.split('.')[1]));
                     $location.path('/papers');
                 })
                 .error(function() {
@@ -28,8 +29,8 @@ angular.module('papermill').factory("AuthService", function ($q, $http, $locatio
                 .success(function(data) {
                     user.id = null;
                     user.profile = null;
-                    $window.sessionStorage.token = null;
-                    $location.path('/');
+                    delete $window.sessionStorage.token;
+                    $location.path('/login');
                 })
                 .error(function() {
                     console.log('couldn\'t logout');
@@ -37,7 +38,6 @@ angular.module('papermill').factory("AuthService", function ($q, $http, $locatio
 
         },
         signin: function(profile) {
-            console.log(profile);
             $http.post('/api/auth/signin', profile)
                 .success(function(data) {
                     $location.path('/login');

@@ -5,7 +5,6 @@ app.controller('LoginCtrl', ['$scope', '$location', 'AuthService', function($sco
     $scope.credentials = {};
 
     $scope.login = function() {
-        console.log($scope.credentials);
         AuthService.login($scope.credentials);
     };
 

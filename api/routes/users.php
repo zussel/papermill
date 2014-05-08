@@ -20,7 +20,8 @@ $app->group('/user', function () use ($app) {
         $app->response()->header("Content-Type", "application/json");
         $user = Model::factory('User')->find_one($id);
         if ($user != null) {
-            echo json_encode($user->as_array());
+            $res = $user->serialize();
+            echo $res;
         } else {
             $app->response->setStatus(404);
         }
@@ -68,5 +69,3 @@ $app->group('/user', function () use ($app) {
         }
     });
 });
-
-?>

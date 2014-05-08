@@ -56,7 +56,7 @@ class AuthorPaper extends Model {
 class User extends Model {
     public function serialize() {
         // TODO: exclude password and salt
-        return json_encode($this->as_array());
+        return json_encode(array('email' => $this->email));
     }
 
     public function deserialize($json) {
