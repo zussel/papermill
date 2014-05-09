@@ -46,15 +46,14 @@ $app->group('/auth', function () use ($app) {
                      * 24 hours (in seconds)
                      */
                     $expiry = 24 * 60 * 60;
-                    $key = 'secret';
-                    $token['email'] = $user->email;
+                    $key = $GLOBALS['config']['jwt-secret'];
                     $token['id'] = $user->id;
                     $token['aud'] = 'papermill';
                     $token['exp'] = time() + $expiry;
 
                     $jwt = JWT::encode($token, $key);
 
-                    echo '{ "token": "'.$jwt.'", "id": '.$user->id.' }';
+                    echo '{ "token": "'.$jwt.'" }';
                 }
 
             } else {

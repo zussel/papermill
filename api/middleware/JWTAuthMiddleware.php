@@ -43,7 +43,7 @@ class JWTAuthMiddleware extends \Slim\Middleware
         } else {
             try {
                 $auth = $headers['Authorization'];
-                $payload = JWT::decode($auth, 'secret');
+                $payload = JWT::decode($auth, $GLOBALS['config']['jwt-secret']);
                 // check aud
                 if (empty($payload->aud) || $payload->aud != 'papermill') {
                     $this->app->response()->status(401);
