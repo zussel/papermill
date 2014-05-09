@@ -27,6 +27,24 @@ $app->group('/user', function () use ($app) {
         }
     });
 
+    /*
+     * get user profile by id
+     */
+    $app->get('/:id/profile', function($id) use ($app) {
+        $app->response()->header("Content-Type", "application/json");
+        $user = Model::factory('User')->find_one($id);
+        if ($user != null) {
+            $profile = $user->author()->find_one();
+            if ($profile != null) {
+                echo $profile->serialize();
+            } else {
+                $app->response->setStatus(204);
+            }
+        } else {
+            $app->response->setStatus(404);
+        }
+    });
+
     $app->post('', function () use ($app) {
         $data = $app->request()->getBody();
 
