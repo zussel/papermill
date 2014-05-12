@@ -16,11 +16,6 @@ angular.module('papermill').factory("AuthService", function ($q, $http, $locatio
                      * store token and user id
                      */
                     $window.sessionStorage.token = data.token;
-                    var payload = angular.fromJson($window.atob(data.token.split('.')[1]));
-                    user.id = payload.id;
-                    $window.sessionStorage.user = {
-                        id: payload.id
-                    };
                     $location.path('/papers');
                 })
                 .error(function() {
@@ -33,7 +28,6 @@ angular.module('papermill').factory("AuthService", function ($q, $http, $locatio
                     user.id = null;
                     user.profile = null;
                     delete $window.sessionStorage.token;
-                    delete $window.sessionStorage.user;
                     $location.path('/login');
                 })
                 .error(function() {
@@ -62,12 +56,14 @@ angular.module('papermill').factory("AuthService", function ($q, $http, $locatio
                  */
                 console.log("user authenticated: " + user.id);
                 defer.resolve(user);
-            } else if (user.id && !user.profile) {
+            } else if (!user.id && !user.profile) {
                 /*
                  * user is logged in, but
                  * profile wasn't retrieved yet
                  * retrieve profile now
                  */
+                var payload = angular.fromJson($window.atob($window.sessionStorage.token.split('.')[1]));
+                user.id = payload.id;
                 var promise = $http.get('/api/user/' + user.id + '/profile').success(function(data) {
                     user.profile = data;
                 });
