@@ -29,7 +29,7 @@ class Paper extends Model {
     }
 }
 
-class Author extends Model {
+class Profile extends Model {
     public function serialize() {
         return json_encode($this->as_array());
     }
@@ -50,7 +50,7 @@ class Author extends Model {
     }
 }
 
-class AuthorPaper extends Model {
+class ProfilePaper extends Model {
 }
 
 class User extends Model {
@@ -70,7 +70,7 @@ class User extends Model {
         }
     }
 
-    public function author() {
-        return $this->has_one('Author');
+    public function profile() {
+        return $this->has_one('Profile');
     }
 }

@@ -34,7 +34,7 @@ $app->group('/user', function () use ($app) {
         $app->response()->header("Content-Type", "application/json");
         $user = Model::factory('User')->find_one($id);
         if ($user != null) {
-            $profile = $user->author()->find_one();
+            $profile = $user->profile()->find_one();
             if ($profile != null) {
                 echo $profile->serialize();
             } else {

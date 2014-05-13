@@ -6,17 +6,14 @@
  * Time: 21:46
  */
 function setup_db() {
+    $db = ORM::get_db();
+
     /*
      * create user table consisting of
      * - unique id (id)
-     * - username (name)
-     * - first name (first_name)
-     * - last name (last_name)
      * - email address (email)
      * - password (passwd)
      */
-    $db = ORM::get_db();
-
     $db->exec('CREATE TABLE IF NOT EXISTS user (
                id INTEGER PRIMARY KEY,
                email VARCHAR(256),
@@ -24,7 +21,7 @@ function setup_db() {
                passwd_salt BLOB);');
 //               passwd_salt CHAR(32));');
 
-    $db->exec('CREATE TABLE IF NOT EXISTS author (
+    $db->exec('CREATE TABLE IF NOT EXISTS profile (
                id INTEGER PRIMARY KEY,
                user_id INTEGER,
                name VARCHAR(256),
@@ -48,8 +45,8 @@ function setup_db() {
               paper_id integer,
               tag_id integer);');
 
-    $db->exec('CREATE TABLE IF NOT EXISTS author_paper (
-              author_id integer,
+    $db->exec('CREATE TABLE IF NOT EXISTS profile_paper (
+              profile_id integer,
               paper_id integer);');
 }
 
@@ -58,20 +55,20 @@ function clear_tables()
     $db = ORM::get_db();
 
     $db->exec('DELETE FROM user');
-    $db->exec('DELETE FROM author');
+    $db->exec('DELETE FROM profile');
     $db->exec('DELETE FROM paper');
     $db->exec('DELETE FROM tag');
     $db->exec('DELETE FROM paper_tag');
-    $db->exec('DELETE FROM author_paper');
+    $db->exec('DELETE FROM profile_paper');
 }
 
 function drop_db() {
     $db = ORM::get_db();
 
     $db->exec('DROP TABLE user');
-    $db->exec('DROP TABLE author');
+    $db->exec('DROP TABLE profile');
     $db->exec('DROP TABLE paper');
     $db->exec('DROP TABLE tag');
     $db->exec('DROP TABLE paper_tag');
-    $db->exec('DROP TABLE author_paper');
+    $db->exec('DROP TABLE profile_paper');
 }

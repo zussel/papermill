@@ -111,7 +111,7 @@ $app->group('/auth', function () use ($app) {
 
                     $arr['user_id'] = $user->id;
 
-                    $author = Model::factory('Author')->create();
+                    $author = Model::factory('Profile')->create();
                     $author->deserialize($arr);
                     $author->save();
 
