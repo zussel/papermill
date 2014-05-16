@@ -1,6 +1,6 @@
 <div class="modal-dialog">
     <div class="modal-content">
-        <form class="form-horizontal">
+        <form class="form-horizontal" flow-init>
             <div class="modal-header">
                 <h3>Neues Paper anlegen</h3>
             </div>
@@ -35,7 +35,7 @@
                     <div class="form-group">
                         <label for="Paper" class="col-lg-2 control-label">Paper</label>
                         <div class="col-lg-10">
-                            <input ng-file-select class="form-control" type="file" id="PaperFileInput" style="display:none"/>
+                            <input ng-file-select="onPaperSelect($files)" class="form-control" type="file" id="PaperFileInput" style="display:none"/>
                             <div class="input-group">
                                 <input type="text" id="Paper" ng-model="paper.file.name" class="form-control">
                                 <span class="input-group-btn">

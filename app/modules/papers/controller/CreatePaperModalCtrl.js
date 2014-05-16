@@ -1,8 +1,8 @@
 var app = angular.module('papermill');
 
 app.controller('CreatePaperModalCtrl', [
-    '$scope', '$http', '$modalInstance', '$fileUploader', 'Paper',
-    function($scope, $http, $modalInstance, $fileUploader, Paper) {
+    '$scope', '$http', '$modalInstance', '$upload', 'Paper',
+    function($scope, $http, $modalInstance, $upload, Paper) {
 
         $scope.paper = {};
 
@@ -10,20 +10,18 @@ app.controller('CreatePaperModalCtrl', [
             $('#PaperFileInput').click();
         };
 
-        $scope.uploader = $fileUploader.create({
-            scope: $scope,                          // to automatically update the html. Default: $rootScope
-            url: 'upload.php',
-            formData: [
-                { key: 'value' }
-            ]
-        });
-
-        $scope.uploader.bind('afteraddingfile', function(event, item) {
-            $scope.paper.file = item.file;
-        });
+        $scope.onPaperSelect = function($files) {
+            $scope.paper.file = $files[0];
+        };
 
         $scope.ok = function () {
 
+            /*
+             * 1. init progressbar
+             * 2. upload paper
+             * 3. save paper data
+             * 4. validate response
+             */
             Paper.save({}, $scope.paper, function() {
                 console.log('success');
             }, function() {
