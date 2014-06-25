@@ -8,22 +8,6 @@
 
 class AuthTest extends Slim_Framework_TestCase
 {
-    public function setUp()
-    {
-        parent::setup();
-
-        ORM::configure('sqlite::memory:');
-
-        setup_db();
-
-        $this->setup_dummy_data();
-    }
-
-    public function tearDown()
-    {
-        drop_db();
-    }
-
     /*
     public function testPost_Signin_SUCCESS()
     {
@@ -33,36 +17,27 @@ class AuthTest extends Slim_Framework_TestCase
 
     public function testPost_Login_SUCCESS()
     {
-        $user = array(
-            'email' => 'a@a.de',
-            'passwd' => 'secret'
-        );
-        $json = json_encode($user);
+        $token = $this->login('a@a.de', 'secret');
 
-        $this->post('/auth/login', $json, array('Content-Type' => 'application/json'));
+        $key = $GLOBALS['config']['jwt-secret'];
+        $jwt = JWT::decode($token->token, $key);
 
-        $user['id'] = '1';
-        $key = 'secret';
-        $jwt = $jwt = JWT::encode($user, $key);
-
-        $token = json_decode($this->response->getBody());
-        var_dump($token);
-
-        $user = JWT::decode($token->token, $key);
-
-        var_dump($user);
-
+        $this->assertEquals(1, $jwt->id);
+        $this->assertEquals('papermill', $jwt->aud);
         $this->assertEquals(200, $this->response->status());
     }
 
-    private function setup_dummy_data()
+    public function testPost_Login_PWD_FAILURE()
     {
-        $db = ORM::get_db();
+        $token = $this->login('a@a.de', 'wrong_secret');
 
-        /*
-         * insert user
-         */
-        $db->exec('INSERT INTO user (email, passwd) VALUES ("a@a.de", "secret")');
+        $this->assertEquals(400, $this->response->status());
+    }
 
+    public function testPost_Login_EMAIL_FAILURE()
+    {
+        $token = $this->login('wrong@email.de', 'secret');
+
+        $this->assertEquals(400, $this->response->status());
     }
 }

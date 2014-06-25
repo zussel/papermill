@@ -25,7 +25,9 @@ class JWTAuthMiddleware extends \Slim\Middleware
         /*
          * get auth header
          */
-        $headers = apache_request_headers();
+        $headers = $this->app->request()->headers();
+//        $headers = apache_request_headers();
+        var_dump($headers);
 
         if (in_array($path, $this->special_paths)) {
             if (isset($headers['Authorization'])) {

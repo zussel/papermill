@@ -1,7 +1,7 @@
 <?php
 
 class Paper extends Model {
-    
+
     /**
      * serialize to a json object
      */
@@ -14,7 +14,7 @@ class Paper extends Model {
      * deserialze from a json object
      */
     public function deserialize($json) {
-        $fields = array('title', 'year', 'author');
+        $fields = array('title', 'year');
         foreach($fields as $field) {
             if (array_key_exists($field, $json)) {
                 $this->$field = $json[$field];
@@ -25,7 +25,7 @@ class Paper extends Model {
     }
 
     public function authors() {
-        return $this->has_many_through('Author');
+        return $this->has_many_through('Profile');
     }
 }
 
@@ -35,7 +35,7 @@ class Profile extends Model {
     }
 
     public function deserialize($json) {
-        $fields = array('name', 'user_id');
+        $fields = array('name', 'first_name', 'last_name', 'user_id', 'active');
         foreach($fields as $field) {
             if (array_key_exists($field, $json)) {
                 $this->$field = $json[$field];

@@ -8,72 +8,71 @@
 
 class PaperTest extends Slim_Framework_TestCase
 {
-    public function setUp()
-    {
-        parent::setup();
-
-        ORM::configure('sqlite::memory:');
-
-        setup_db();
-
-        $this->setup_dummy_data();
-
-        
-    }
-
-    public function tearDown()
-    {
-        drop_db();
-    }
-
     public function testPost_SUCCESS()
     {
+        $token = $this->login('a@a.de', 'secret');
+
         $paper = json_encode(array(
             'title' => 'Mein erstes paper',
-            'author' => 'Günter Hölüp',
             'year' => 2014,
             'url' => '/path/to/file'
         ));
-        
-        $this->post('/paper', $paper, array('Content-Type' => 'application/json'));
+
+        $this->post('/paper', $paper, array(
+            'Content-Type' => 'application/json',
+            'Authorization' => $token
+        ));
         $this->assertEquals(200, $this->response->status());
     }
 
     public function testPost_FAILURE()
     {
+        $token = $this->login('a@a.de', 'secret');
+
         $paper = json_encode(array(
             'author' => 'Günter Hölüp',
-            'year' => 2014,
             'url' => '/path/to/file'
         ));
 
-        $this->post('/paper', $paper, array('Content-Type' => 'application/json'));
+        $this->post('/paper', $paper, array(
+            'Content-Type' => 'application/json',
+            'Authorization' => $token
+        ));
+
         $this->assertEquals(400, $this->response->status());
     }
 
     public function testGet_SUCCESS()
     {
-        $this->get('/paper/1');
+        $token = $this->login('a@a.de', 'secret');
+
+        $this->get('/paper/1', null, array(
+            'Content-Type' => 'application/json',
+            'Authorization' => $token
+        ));
         $this->assertEquals(200, $this->response->status());
     }
 
     public function testGet_FAILURE()
     {
-        $this->get('/paper/2');
-        $this->assertEquals(404, $this->response->status());
+        $token = $this->login('a@a.de', 'secret');
+
+        $this->get('/paper/2', null, array(
+            'Content-Type' => 'application/json',
+            'Authorization' => $token
+        ));
+
+//        $this->assertEquals(404, $this->response->status());
+        $this->assertEquals(404, $this->app->response()->status());
     }
 
-    private function setup_dummy_data() {
-        $db = ORM::get_db();
+    protected function configure_database() {
+        parent::configure_database();
 
-        /*
-         * insert user
-         */
-        $db->exec('INSERT INTO user (email, passwd) VALUES ("a@a.de", "secret")');
+        $db = ORM::get_db();
         /*
          * insert some paper data
          */
-        $db->exec('INSERT INTO paper (year, title, author, url) VALUES (2014, "Mein erstes Paper", "Günter Öhil", "/path/to/file")') or die(print_r($db->errorInfo(), true));
-
+        $db->exec('INSERT INTO paper (year, title, url) VALUES (2014, "Mein erstes Paper", "/path/to/file")') or die(print_r($db->errorInfo(), true));
     }
 }
