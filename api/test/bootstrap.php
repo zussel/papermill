@@ -47,7 +47,7 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         require __DIR__ . '/../routes/papers.php';
 
         $app->add(new \Slim\Middleware\ContentTypes());
-//        $app->add(new \JWTAuthMiddleware());
+        $app->add(new \JWTAuthMiddleware());
 
         // Establish a local reference to the Slim app object
         $this->app = $app;
@@ -134,9 +134,28 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         */
     }
 
-    protected function mockAuthenticate() {
-        $middleware = $this->getMock('\JWTAuthMiddleware');
+    protected function createJWTToken($userid) {
+        $expiry = 24 * 60 * 60;
+        $key = $GLOBALS['config']['jwt-secret'];
+        $token['id'] = $userid;
+        $token['aud'] = 'papermill';
+        $token['exp'] = time() + $expiry;
+
+        return JWT::encode($token, $key);
     }
+    /*
+    protected function mockAuthenticate($hasAuth, $auth) {
+        $middleware = $this->getMock('\JWTAuthMiddleware');
+        $middleware->expects($this->any())
+            ->method('hasAuthenticate')
+            ->will($this->returnValue($hasAuth));
+        $middleware->expects($this->any())
+            ->method('authenticate')
+            ->will($this->returnValue($auth));
+
+        $this->app->add($middleware);
+    }
+    */
 }
 
 /* End of file bootstrap.php */

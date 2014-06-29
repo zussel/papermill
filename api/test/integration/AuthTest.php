@@ -29,14 +29,14 @@ class AuthTest extends Slim_Framework_TestCase
 
     public function testPost_Login_PWD_FAILURE()
     {
-        $token = $this->login('a@a.de', 'wrong_secret');
+        $this->login('a@a.de', 'wrong_secret');
 
         $this->assertEquals(400, $this->response->status());
     }
 
     public function testPost_Login_EMAIL_FAILURE()
     {
-        $token = $this->login('wrong@email.de', 'secret');
+        $this->login('wrong@email.de', 'secret');
 
         $this->assertEquals(400, $this->response->status());
     }

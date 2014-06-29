@@ -25,18 +25,16 @@ class JWTAuthMiddleware extends \Slim\Middleware
         /*
          * get auth header
          */
-        $headers = $this->app->request()->headers();
-//        $headers = apache_request_headers();
-        var_dump($headers);
+        $headers = $this->app->request->headers();
 
         if (in_array($path, $this->special_paths)) {
-            if (isset($headers['Authorization'])) {
+            if ($this->hasAuthentication($headers)) {
                 // not allowed
                 $this->app->response()->status(405);
             } else {
                 $this->next->call();
             }
-        } else if (!isset($headers['Authorization'])) {
+        } else if (!$this->hasAuthentication($headers)) {
             // not authenticated
             $this->app->response()->status(401);
             $this->app->response()->body(json_encode(array(
@@ -44,14 +42,11 @@ class JWTAuthMiddleware extends \Slim\Middleware
             )));
         } else {
             try {
-                $auth = $headers['Authorization'];
-                $payload = JWT::decode($auth, $GLOBALS['config']['jwt-secret']);
-                // check aud
-                if (empty($payload->aud) || $payload->aud != 'papermill') {
+                if ($this->authenticate($headers)) {
+                    $this->next->call();
+                } else {
                     $this->app->response()->status(401);
                     $this->app->response()->body(json_encode(array('error' => 'invalid aud')));
-                } else {
-                    $this->next->call();
                 }
             } catch (UnexpectedValueException $ex) {
                 $this->app->response()->status(401);
@@ -61,6 +56,19 @@ class JWTAuthMiddleware extends \Slim\Middleware
                 $this->app->response()->status(401);
                 $this->app->response()->body(json_encode(array('error' => 'domain exception: '.$ex->getMessage())));
             }
+        }
+    }
+    private function hasAuthentication($headers) {
+        return isset($headers['Authorization']);
+    }
+    private function authenticate($headers) {
+        $auth = $headers['Authorization'];
+        $payload = JWT::decode($auth, $GLOBALS['config']['jwt-secret']);
+        // check aud
+        if (empty($payload->aud) || $payload->aud != 'papermill') {
+            return false;
+        } else {
+            return true;
         }
     }
 }
