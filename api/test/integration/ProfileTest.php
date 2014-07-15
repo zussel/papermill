@@ -11,8 +11,9 @@ class ProfileTest extends Slim_Framework_TestCase
             'active' => 0
         ));
 
-        $this->post('/profile', $profile, array('Content-Type' => 'application/json'));
+        $p = json_decode($this->post('/profile', $profile, array('Content-Type' => 'application/json')));
         $this->assertEquals(200, $this->response->status());
+        $this->assertTrue($p->id > 0);
     }
 
     public function testPost_FAILURE()
@@ -35,7 +36,7 @@ class ProfileTest extends Slim_Framework_TestCase
 
     public function testGet_FAILURE()
     {
-        $this->get('/profile/2');
+        $this->get('/profile/4711');
         $this->assertEquals(404, $this->response->status());
     }
 
@@ -47,5 +48,9 @@ class ProfileTest extends Slim_Framework_TestCase
          * insert some paper data
          */
         $db->exec('INSERT INTO profile (name, first_name, last_name, user_id, active) VALUES ("bruce", "Bruce", "Willis", 0, 0)');
+        $db->exec('INSERT INTO profile (name, first_name, last_name, user_id, active) VALUES ("arnold", "Arnold", "Schwarzenegger", 0, 0)');
+        $db->exec('INSERT INTO profile (name, first_name, last_name, user_id, active) VALUES ("sly", "Sylvester", "Stalone", 0, 0)');
+        $db->exec('INSERT INTO profile (name, first_name, last_name, user_id, active) VALUES ("steve", "Steve", "Carrel", 0, 0)');
+        $db->exec('INSERT INTO profile (name, first_name, last_name, user_id, active) VALUES ("jim", "Jim", "Carrey", 0, 0)');
     }
 }

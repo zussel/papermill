@@ -100,7 +100,7 @@ $app->group('/profile', function () use ($app) {
             try {
                 $profile->deserialize($arr);
                 $profile->save();
-                echo json_encode($arr);
+                echo $profile->serialize();
             } catch (ModelException $e) {
                 $app->response->setStatus(400);
                 echo '{"error":"'.$e->getMessage().'"}';
