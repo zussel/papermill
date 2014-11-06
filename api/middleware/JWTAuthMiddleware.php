@@ -25,8 +25,10 @@ class JWTAuthMiddleware extends \Slim\Middleware
         /*
          * get auth header
          */
-        $headers = $this->app->request->headers();
+//        $request = $this->app->request;
+//        $headers = $request->headers('Authorization');
 
+        $headers = $this->app->environment;
         if (in_array($path, $this->special_paths)) {
             if ($this->hasAuthentication($headers)) {
                 // not allowed

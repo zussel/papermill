@@ -11,7 +11,10 @@ class ProfileTest extends Slim_Framework_TestCase
             'active' => 0
         ));
 
-        $p = json_decode($this->post('/profile', $profile, array('Content-Type' => 'application/json')));
+        $p = json_decode($this->post('/profile', $profile, array(
+            'Content-Type' => 'application/json',
+            'Authorization'  => $this->createJWTToken(1)))
+        );
         $this->assertEquals(200, $this->response->status());
         $this->assertTrue($p->id > 0);
     }
