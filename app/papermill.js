@@ -2,7 +2,7 @@ var papermill = angular.module('papermill', [
     'ngRoute',
     'ngResource',
     'ui.bootstrap.modal',
-    'angularFileUpload',
+//    'angularFileUpload',
     'ngTagsInput'
 ]);
 
