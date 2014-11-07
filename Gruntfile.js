@@ -21,13 +21,7 @@ module.exports = function(grunt) {
                 options: {
                     port: 9000,
                     base: '.',
-                    keepalive: true,
-                    middleware: function (connect) {
-                        return [
-                            require('connect-livereload')(),
-                            connect.static(require('path').resolve('.'))
-                        ];
-                    }
+                    keepalive: true
                 }
             }
         },
