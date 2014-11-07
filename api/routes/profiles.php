@@ -56,7 +56,7 @@ $app->group('/profile', function () use ($app) {
      *
      * select * from profile where name like %Hans% or first_name like %Hans% or last_name like %Andersen%
      */
-    $app->get('find', function () use ($app) {
+    $app->get('/find', function () use ($app) {
         // get query
         $query = $app->request()->get('query');
         // parse query

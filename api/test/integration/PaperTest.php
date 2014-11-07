@@ -43,8 +43,11 @@ class PaperTest extends Slim_Framework_TestCase
 
     public function testGet_SUCCESS()
     {
+        $token = $this->login('a@a.de', 'secret');
+
         $this->get('/paper/1', null, array(
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
+            'HTTP_AUTHORIZATION'  => 'Bearer ' . $token->token
         ));
         $this->assertEquals(200, $this->response->status());
     }

@@ -11,10 +11,12 @@ class ProfileTest extends Slim_Framework_TestCase
             'active' => 0
         ));
 
+        $token = $this->login('a@a.de', 'secret');
+
         $p = json_decode($this->post('/profile', $profile, array(
             'Content-Type' => 'application/json',
-            'X-Authorization'  => $this->createJWTToken(1)))
-        );
+            'Authorization'  => 'Bearer ' . $token->token)
+        ));
         $this->assertEquals(200, $this->response->status());
         $this->assertTrue($p->id > 0);
     }
@@ -33,7 +35,9 @@ class ProfileTest extends Slim_Framework_TestCase
 
     public function testGet_SUCCESS()
     {
-        $this->get('/profile/1');
+        $token = $this->login('a@a.de', 'secret');
+
+        $this->get('/profile/1', array('Authorization'  => 'Bearer ' . $token->token));
         $this->assertEquals(200, $this->response->status());
     }
 
@@ -41,6 +45,11 @@ class ProfileTest extends Slim_Framework_TestCase
     {
         $this->get('/profile/4711');
         $this->assertEquals(404, $this->response->status());
+    }
+
+    public function testFindAll_SUCCESS()
+    {
+        
     }
 
     protected function configure_database() {

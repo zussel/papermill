@@ -12,9 +12,9 @@ class JWTAuthMiddleware extends \Slim\Middleware
      * Regular expression to extract token from the HTTP headers
      * @var string
      */
-    protected $bearerTokenRegEx = '#Bearer\s(\S+)#';
+    protected $bearerTokenRegEx = '/Bearer\s(\S+)/';
 
-    var $special_paths = array("/auth/login", "/auth/signin", "/setup", "icon.ico");
+    var $special_paths = array("/auth/login", "/auth/signin", "/setup", "/icon.ico");
 
     public function call()
     {
@@ -28,7 +28,7 @@ class JWTAuthMiddleware extends \Slim\Middleware
 //        $request = $this->app->request;
         $headers = $this->app->request->headers();
 
-//        $headers = $this->app->environment;
+        $headers = $this->app->environment;
         if (in_array($path, $this->special_paths)) {
             if ($this->hasAuthentication($headers)) {
                 // not allowed
@@ -61,10 +61,13 @@ class JWTAuthMiddleware extends \Slim\Middleware
         }
     }
     private function hasAuthentication($headers) {
-        return isset($headers['X-Authorization']);
+        return isset($headers['HTTP_AUTHORIZATION']) && !empty($headers['HTTP_AUTHORIZATION']);
+//        return isset($headers['Authorization']) && !empty($headers['Authorization']);
     }
     private function authenticate($headers) {
-        $auth = $headers['X-Authorization'];
+//        preg_match($this->bearerTokenRegEx, $headers['Authorization'], $hits);
+        preg_match($this->bearerTokenRegEx, $headers['HTTP_AUTHORIZATION'], $hits);
+        $auth = $hits[1];
         $payload = JWT::decode($auth, $GLOBALS['config']['jwt-secret']);
         // check aud
         if (empty($payload->aud) || $payload->aud != 'papermill') {

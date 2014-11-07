@@ -36,7 +36,7 @@ papermill.config(['$httpProvider', function($httpProvider) {
                 request.headers['Accept-Language'] = "de-de";
                 if ($window.sessionStorage.token) {
 //                    request.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
-                    request.headers['X-Authorization'] = $window.sessionStorage.token;
+                    request.headers['Authorization'] = 'Bearer ' + $window.sessionStorage.token;
                 }
                 return request;
             },
