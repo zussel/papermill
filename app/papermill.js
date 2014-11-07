@@ -2,7 +2,7 @@ var papermill = angular.module('papermill', [
     'ngRoute',
     'ngResource',
     'ui.bootstrap.modal',
-//    'angularFileUpload',
+    'angularFileUpload',
     'ngTagsInput'
 ]);
 
@@ -33,9 +33,10 @@ papermill.config(['$httpProvider', function($httpProvider) {
         return {
             'request': function(request) {
                 request.headers = request.headers || {};
+                request.headers['Accept-Language'] = "de-de";
                 if ($window.sessionStorage.token) {
 //                    request.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
-                    request.headers.Authorization = $window.sessionStorage.token;
+                    request.headers['X-Authorization'] = $window.sessionStorage.token;
                 }
                 return request;
             },

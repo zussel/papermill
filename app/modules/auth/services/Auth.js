@@ -64,10 +64,12 @@ angular.module('papermill').factory("AuthService", function ($q, $http, $locatio
                  */
                 var payload = angular.fromJson($window.atob($window.sessionStorage.token.split('.')[1]));
                 user.id = payload.id;
-                var promise = $http.get('/api/user/' + user.id + '/profile').success(function(data) {
+                $http.get('/api/user/' + user.id + '/profile').success(function(data) {
                     user.profile = data;
-                });
-                return promise;
+                    defer.resolve(user);
+                }).error(function(error) {
+                    defer.reject(error);
+                })
             } else {
                 /*
                  * user isn't logged in

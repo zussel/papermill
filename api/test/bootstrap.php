@@ -30,6 +30,9 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
             'mode'           => 'testing',
             'log.enabled'    => true
         ));
+
+        $GLOBALS['config'] = include __DIR__ . '/../config/config.php';
+
         // Include our core application file
         require_once __DIR__ . '/../config/database.php';
         require_once __DIR__ . '/../models/exceptions.php';
@@ -39,14 +42,22 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
 
         require __DIR__ . '/../routes/setup.php';
         require __DIR__ . '/../routes/users.php';
+        require __DIR__ . '/../routes/profiles.php';
         require __DIR__ . '/../routes/auth.php';
         require __DIR__ . '/../routes/papers.php';
 
         $app->add(new \Slim\Middleware\ContentTypes());
-        //$app->add(new \JWTAuthMiddleware());
+        $app->add(new \JWTAuthMiddleware());
 
         // Establish a local reference to the Slim app object
         $this->app = $app;
+
+        $this->configure_database();
+    }
+
+    public function tearDown()
+    {
+        drop_db();
     }
 
     // Abstract way to make a request to SlimPHP, this allows us to mock the
@@ -84,6 +95,67 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         }
         throw new \BadMethodCallException(strtoupper($method) . ' is not supported');
     }
+
+    protected function login($email, $passwd) {
+        $user = array(
+            'email' => $email,
+            'passwd' => $passwd
+        );
+        $json = json_encode($user);
+
+        $this->post('/auth/login', $json, array('Content-Type' => 'application/json'));
+
+        return json_decode($this->response->getBody());
+    }
+
+    protected function configure_database() {
+        // setup db
+        ORM::configure('sqlite::memory:');
+
+        setup_db();
+
+        $salt = openssl_random_pseudo_bytes(16);
+        $passwd = sha1('secret' . $salt);
+
+        /*
+         * insert user
+         */
+        $user = Model::factory('User')->create();
+        $user->email = 'a@a.de';
+        $user->passwd = $passwd;
+        $user->passwd_salt = $salt;
+        $user->save();
+
+        /*
+        $db = ORM::get_db();
+
+        $sql = 'INSERT INTO user (email, passwd, passwd_salt) VALUES ("a@a.de", "' + $passwd + '", "' + $salt + '")';
+        $db->exec($sql);
+        */
+    }
+
+    protected function createJWTToken($userid) {
+        $expiry = 24 * 60 * 60;
+        $key = $GLOBALS['config']['jwt-secret'];
+        $token['id'] = $userid;
+        $token['aud'] = 'papermill';
+        $token['exp'] = time() + $expiry;
+
+        return JWT::encode($token, $key);
+    }
+    /*
+    protected function mockAuthenticate($hasAuth, $auth) {
+        $middleware = $this->getMock('\JWTAuthMiddleware');
+        $middleware->expects($this->any())
+            ->method('hasAuthenticate')
+            ->will($this->returnValue($hasAuth));
+        $middleware->expects($this->any())
+            ->method('authenticate')
+            ->will($this->returnValue($auth));
+
+        $this->app->add($middleware);
+    }
+    */
 }
 
 /* End of file bootstrap.php */

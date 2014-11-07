@@ -6,6 +6,17 @@ module.exports = function(grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+
+        phpunit: {
+            classes: {
+                dir: 'api/test/'
+            },
+            options: {
+                bootstrap: 'api/test/bootstrap.php',
+                colors: true
+            }
+        },
+        
         uglify: {
             options: {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
@@ -30,11 +41,11 @@ module.exports = function(grunt) {
         watch: {
             all: {
                 // Replace with whatever file you want to trigger the update from
-                // Either as a String for a single entry 
+                // Either as a String for a single entry
                 // or an Array of String for multiple entries
                 // You can use globing patterns like `css/**/*.css`
                 // See https://github.com/gruntjs/grunt-contrib-watch#files
-//                files: 'index.html',
+                //                files: 'index.html',
                 files: ['index.html', 'app/**/*'],
                 options: {
                     livereload: true

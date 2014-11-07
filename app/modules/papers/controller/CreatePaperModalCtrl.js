@@ -22,6 +22,24 @@ app.controller('CreatePaperModalCtrl', [
              * 3. save paper data
              * 4. validate response
              */
+            $scope.upload = $upload.upload({
+                url: 'upload',
+                method: 'POST',
+                data: {
+                    paper: $scope.paper
+                },
+                file: $scope.file,
+                fileFormDataName: $scope.file.name
+            }).then(function(response) {
+                $scope.uploadResult.push(response.data);
+            }, function(response) {
+                if (response.status > 0) $scope.errorMsg = response.status + ': ' + response.data;
+            }, function(evt) {
+                // Math.min is to fix IE which reports 200% sometimes
+                $scope.progress[index] = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+            }).xhr(function(xhr){
+                xhr.upload.addEventListener('abort', function() {console.log('abort complete')}, false);
+            });
             Paper.save({}, $scope.paper, function() {
                 console.log('success');
             }, function() {
