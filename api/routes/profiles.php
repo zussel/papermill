@@ -19,33 +19,9 @@ $app->group('/profile', function () use ($app) {
 
         $profiles = array_map(function($a) {
                 $arr = $a->serialize();
-                /*
-                $arr = $a->as_array();
-                $arr["name"] = utf8_encode($arr["name"]);
-                $arr["first_name"] = utf8_encode($arr["first_name"]);
-                $arr["last_name"] = utf8_encode($arr["last_name"]);
-                */
                 return $arr; },
             $profiles);
         echo json_encode($profiles);
-    });
-
-    /*
-     * get profile by id
-     */
-    $app->get('/:id', function ($id) use ($app) {
-        $profile = Model::factory('Profile')->find_one($id);
-        if ($profile != null) {
-            echo $profile->serialize();
-            /*
-            $arr = $profile->as_array();
-            $arr["first_name"] = utf8_encode($arr["first_name"]);
-            $arr["last_name"] = utf8_encode($arr["last_name"]);
-            echo json_encode($arr);
-            */
-        } else {
-            $app->response->setStatus(404);
-        }
     });
 
     /*
@@ -55,29 +31,45 @@ $app->group('/profile', function () use ($app) {
      * results in
      *
      * select * from profile where name like %Hans% or first_name like %Hans% or last_name like %Andersen%
+     * $tokens =  preg_match_all('/(\w+)(==|!=|=gt=|=ge=|=le=|=lt=)([\w\.]+)([,;])?/', $query, $matches, PREG_SET_ORDER);
      */
-    $app->get('/find', function () use ($app) {
+    $app->get('/find/', function () use ($app) {
         // get query
-        $query = $app->request()->get('query');
+        $term = $app->request()->get('term');
         // parse query
-        if (isset($query)) {
-            $tokens =  preg_match_all('/(\w+)(==|!=|=gt=|=ge=|=le=|=lt=)([\w\.]+)([,;])?/', $query, $matches, PREG_SET_ORDER);
-
+        if (isset($term)) {
+            $profiles = Model::factory('Profile')
+                ->where_raw('(name like ? OR first_name like ? OR last_name like ?)',
+                    array('%'.$term.'%', '%'.$term.'%', '%'.$term.'%'))
+                ->find_many();
+            $profiles = array_map(function($a) {
+                    $arr = $a->serialize();
+                    return $arr;
+                }, $profiles
+            );
+            echo json_encode($profiles);
         } else {
             $profiles = Model::factory('Profile')
                 ->order_by_asc("last_name")
                 ->find_many();
             $profiles = array_map(function($a) {
                     $arr = $a->serialize();
-                    /*
-                    $arr = $a->as_array();
-                    $arr["name"] = utf8_encode($arr["name"]);
-                    $arr["first_name"] = utf8_encode($arr["first_name"]);
-                    $arr["last_name"] = utf8_encode($arr["last_name"]);
-                    */
-                    return $arr; },
-                $profiles);
+                    return $arr;
+                }, $profiles
+            );
             echo json_encode($profiles);
+        }
+    });
+
+    /*
+     * get profile by id
+     */
+    $app->get('/:id', function ($id) use ($app) {
+        $profile = Model::factory('Profile')->find_one($id);
+        if ($profile != null) {
+            echo $profile->serialize();
+        } else {
+            $app->response->setStatus(404);
         }
     });
 

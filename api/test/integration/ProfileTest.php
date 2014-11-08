@@ -11,12 +11,15 @@ class ProfileTest extends Slim_Framework_TestCase
             'active' => 0
         ));
 
-        $token = $this->login('a@a.de', 'secret');
+        $token = $this->createJWTToken(1);
+//        $token = $this->login('a@a.de', 'secret');
 
         $p = json_decode($this->post('/profile', $profile, array(
             'Content-Type' => 'application/json',
-            'Authorization'  => 'Bearer ' . $token->token)
+            'HTTP_AUTHORIZATION'  => 'Bearer ' . $token)
         ));
+        var_dump($p);
+
         $this->assertEquals(200, $this->response->status());
         $this->assertTrue($p->id > 0);
     }
@@ -35,10 +38,14 @@ class ProfileTest extends Slim_Framework_TestCase
 
     public function testGet_SUCCESS()
     {
-        $token = $this->login('a@a.de', 'secret');
-
-        $this->get('/profile/1', array('Authorization'  => 'Bearer ' . $token->token));
+        $res = $this->get('/profile/1', '', '', array(
+            'HTTP_AUTHORIZATION' => 'Bearer '.$this->createJWTToken(1))
+        );
         $this->assertEquals(200, $this->response->status());
+
+        $arr = json_decode($res, true);
+
+        var_dump($arr);
     }
 
     public function testGet_FAILURE()
@@ -49,7 +56,21 @@ class ProfileTest extends Slim_Framework_TestCase
 
     public function testFindAll_SUCCESS()
     {
-        
+        $res = $this->get('/profile/find', null, array(
+            'HTTP_AUTHORIZATION' => 'Bearer '.$this->createJWTToken(1)
+        ));
+        var_dump($res);
+    }
+
+    public function testFindSome_SUCCESS()
+    {
+        $res = $this->get('/profile/find', '', 'term=arr', array(
+            'HTTP_AUTHORIZATION' => 'Bearer '.$this->createJWTToken(1)
+        ));
+        $arr = json_decode($res, true);
+
+        var_dump(json_decode($arr[0], true));
+        //var_dump($arr);
     }
 
     protected function configure_database() {

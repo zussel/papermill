@@ -62,7 +62,7 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
 
     // Abstract way to make a request to SlimPHP, this allows us to mock the
     // slim environment
-    private function request($method, $path, $body = '', $optionalHeaders = array())
+    private function request($method, $path, $body = '', $query = '', $optionalHeaders = array())
     {
         // Capture STDOUT
         ob_start();
@@ -73,6 +73,7 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
             'PATH_INFO'      => $path,
             'SERVER_NAME'    => 'localhost',
 //            'SERVER_NAME'    => 'papermill.local',
+            'QUERY_STRING'   => $query,
             'slim.input'     => $body
         ), $optionalHeaders));
 
@@ -90,8 +91,8 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
     // Implement our `get`, `post`, and other http operations
     public function __call($method, $arguments) {
         if (in_array($method, $this->testingMethods)) {
-            list($path, $formVars, $headers) = array_pad($arguments, 3, array());
-            return $this->request($method, $path, $formVars, $headers);
+            list($path, $formVars, $query, $headers) = array_pad($arguments, 3, array());
+            return $this->request($method, $path, $formVars, $query, $headers);
         }
         throw new \BadMethodCallException(strtoupper($method) . ' is not supported');
     }

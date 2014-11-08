@@ -20,7 +20,7 @@ class PaperTest extends Slim_Framework_TestCase
 
         $this->post('/paper', $paper, array(
             'Content-Type' => 'application/json',
-            'Authorization' => $token
+            'HTTP_AUTHORIZATION' => 'Bearer '.$token
         ));
         $this->assertEquals(200, $this->response->status());
         $body = $this->response->body();
@@ -43,12 +43,14 @@ class PaperTest extends Slim_Framework_TestCase
 
     public function testGet_SUCCESS()
     {
-        $token = $this->login('a@a.de', 'secret');
+//        $token = $this->login('a@a.de', 'secret');
 
-        $this->get('/paper/1', null, array(
+        $res = $this->get('/paper/1', null, array(
             'Content-Type' => 'application/json',
-            'HTTP_AUTHORIZATION'  => 'Bearer ' . $token->token
+            'HTTP_AUTHORIZATION'  => 'Bearer '.$this->createJWTToken(1)
         ));
+        var_dump($res);
+
         $this->assertEquals(200, $this->response->status());
     }
 
