@@ -23,13 +23,13 @@ app.controller('CreatePaperModalCtrl', [
              * 4. validate response
              */
             $scope.upload = $upload.upload({
-                url: 'upload',
+                url: '/api/paper',
                 method: 'POST',
                 data: {
                     paper: $scope.paper
                 },
-                file: $scope.file,
-                fileFormDataName: $scope.file.name
+                file: $scope.paper.file,
+                fileFormDataName: $scope.paper.file.name
             }).then(function(response) {
                 $scope.uploadResult.push(response.data);
             }, function(response) {
@@ -40,12 +40,12 @@ app.controller('CreatePaperModalCtrl', [
             }).xhr(function(xhr){
                 xhr.upload.addEventListener('abort', function() {console.log('abort complete')}, false);
             });
-            Paper.save({}, $scope.paper, function() {
+/*            Paper.save({}, $scope.paper, function() {
                 console.log('success');
             }, function() {
                 console.log('failure');
             });
-            $modalInstance.close();
+            $modalInstance.close();*/
         };
 
         $scope.cancel = function () {

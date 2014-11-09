@@ -95,4 +95,3 @@ $app->group('/paper', function () use ($app) {
     });
 });
 
-?>
