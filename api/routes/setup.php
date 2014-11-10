@@ -42,9 +42,11 @@ $app->get('/setup', function() use ($app) {
 
 $app->get('/clear', function() use ($app) {
   clear_tables();
+  echo "Tables cleared";
 });
 
 $app->get('/drop', function() use ($app) {
   drop_db();
+  echo "Tables dropped";
 });
 
