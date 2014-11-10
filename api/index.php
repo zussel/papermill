@@ -17,7 +17,6 @@ ORM::configure('sqlite:db/papermill.db');
  */
 $GLOBALS['config'] = include __DIR__ . '/config/config.php';
 
-require_once __DIR__ . '/config/config.php';
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/models/exceptions.php';
 require_once __DIR__ . '/models/models.php';

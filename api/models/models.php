@@ -14,7 +14,7 @@ class Paper extends Model {
      * deserialze from a json object
      */
     public function deserialize($json) {
-        $fields = array('title', 'year');
+        $fields = array('title', 'year', 'title', 'url');
         foreach($fields as $field) {
             if (array_key_exists($field, $json)) {
                 $this->$field = $json[$field];
@@ -51,6 +51,9 @@ class Profile extends Model {
 }
 
 class ProfilePaper extends Model {
+}
+
+class Role extends Model {
 }
 
 class User extends Model {

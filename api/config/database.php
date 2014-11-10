@@ -8,6 +8,9 @@
 function setup_db() {
     $db = ORM::get_db();
 
+    $db->exec('CREATE TABLE IF NOT EXISTS role (
+               id INTEGER PRIMARY KEY,
+               name VARCHAR(256));');
     /*
      * create user table consisting of
      * - unique id (id)
@@ -16,6 +19,7 @@ function setup_db() {
      */
     $db->exec('CREATE TABLE IF NOT EXISTS user (
                id INTEGER PRIMARY KEY,
+               role INTEGER,
                email VARCHAR(256),
                passwd CHAR(40),
                passwd_salt BLOB);');
@@ -32,8 +36,11 @@ function setup_db() {
     $db->exec('CREATE TABLE IF NOT EXISTS paper (
                id INTEGER PRIMARY KEY,
                user_id INTEGER,
+               created VARCHAR(32),
                year INTEGER,
                title VARCHAR(256),
+               name VARCHAR(256),
+               size INTEGER,
                type INTEGER,
                url VARCHAR(256));');
 
@@ -65,10 +72,10 @@ function clear_tables()
 function drop_db() {
     $db = ORM::get_db();
 
-    $db->exec('DROP TABLE user');
-    $db->exec('DROP TABLE profile');
-    $db->exec('DROP TABLE paper');
-    $db->exec('DROP TABLE tag');
     $db->exec('DROP TABLE paper_tag');
     $db->exec('DROP TABLE profile_paper');
+    $db->exec('DROP TABLE paper');
+    $db->exec('DROP TABLE tag');
+    $db->exec('DROP TABLE user');
+    $db->exec('DROP TABLE profile');
 }

@@ -28,10 +28,11 @@ app.controller('CreatePaperModalCtrl', [
                 data: {
                     paper: $scope.paper
                 },
-                file: $scope.paper.file,
-                fileFormDataName: $scope.paper.file.name
+                file: $scope.paper.file
             }).then(function(response) {
-                $scope.uploadResult.push(response.data);
+                console.log('successfully saved paper:');
+                console.log(response.data);
+//                $scope.uploadResult.push(response.data);
             }, function(response) {
                 if (response.status > 0) $scope.errorMsg = response.status + ': ' + response.data;
             }, function(evt) {
@@ -44,8 +45,8 @@ app.controller('CreatePaperModalCtrl', [
                 console.log('success');
             }, function() {
                 console.log('failure');
-            });
-            $modalInstance.close();*/
+            });*/
+//            $modalInstance.close();
         };
 
         $scope.cancel = function () {

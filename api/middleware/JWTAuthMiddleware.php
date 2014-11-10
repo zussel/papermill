@@ -14,7 +14,7 @@ class JWTAuthMiddleware extends \Slim\Middleware
      */
     protected $bearerTokenRegEx = '/Bearer\s(\S+)/';
 
-    var $special_paths = array("/auth/login", "/auth/signin", "/setup", "/icon.ico");
+    var $special_paths = array("/auth/login", "/auth/signin", "/setup", "/drop", "/clear", "/icon.ico");
 
     public function call()
     {

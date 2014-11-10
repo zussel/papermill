@@ -54,17 +54,42 @@ $app->group('/paper', function () use ($app) {
      */
     $app->post('', function () use ($app) {
         $app->response()->header("Content-Type", "application/json");
-        $data = $app->request()->getBody();
 
-        if ($data == null) {
+        if (!isset($_FILES['file'])) {
+            $app->response->setStatus(500);
+            echo '{"error":"missing paper file"}';
+            return;
+        };
+
+        $file = $_FILES['file'];
+        $count = count($file['name']);
+
+        if ($count === 0) {
+            echo '{"error":"missing paper file"}';
+            return;
+        }
+
+        if ($file['error'] === 0) {
+            $name = uniqid();
+            if (move_uploaded_file($file['tmp_name'], 'uploads/papers/' . $name) === true) {
+                $papers[] = array('url' => '/uploads/papers/' . $name, 'name' => $file['name']);
+            }
+        }
+
+        $json = $app->request->post('paper');
+
+        if ($json == null) {
             $app->response->setStatus(404);
             echo 'data null';
         } else {
-            if (is_string($data)) {
-              $arr = json_decode($data, true);
+            if (is_string($json)) {
+              $arr = json_decode($json, true);
             } else {
-              $arr = $data;
+              $arr = $json;
             }
+
+            $arr['url'] = $papers[0]['url'];
+//            $arr['name'] = $papers[0]['name'];
 
             /*
              * parse json data
