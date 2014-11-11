@@ -14,6 +14,16 @@ app.controller('CreatePaperModalCtrl', [
             $scope.paper.file = $files[0];
         };
 
+        $scope.refreshAuthors = function(term) {
+            var params = {term: term};
+            return $http.get(
+                '/api/author',
+                {params: params}
+            ).then(function(response) {
+                $scope.authors = response.data.results;
+            });
+        };
+
         $scope.ok = function () {
 
             /*

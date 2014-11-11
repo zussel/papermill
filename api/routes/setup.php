@@ -50,3 +50,13 @@ $app->get('/drop', function() use ($app) {
   echo "Tables dropped";
 });
 
+$app->get('/create/authors', function() use ($app) {
+  $db = ORM::get_db();
+
+  $db->exec('INSERT INTO profile (name, first_name, last_name, user_id, active) VALUES ("bruce", "Bruce", "Willis", 0, 0)');
+  $db->exec('INSERT INTO profile (name, first_name, last_name, user_id, active) VALUES ("arnold", "Arnold", "Schwarzenegger", 0, 0)');
+  $db->exec('INSERT INTO profile (name, first_name, last_name, user_id, active) VALUES ("sly", "Sylvester", "Stalone", 0, 0)');
+  $db->exec('INSERT INTO profile (name, first_name, last_name, user_id, active) VALUES ("steve", "Steve", "Carrel", 0, 0)');
+  $db->exec('INSERT INTO profile (name, first_name, last_name, user_id, active) VALUES ("jim", "Jim", "Carrey", 0, 0)');
+});
+

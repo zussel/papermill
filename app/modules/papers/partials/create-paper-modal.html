@@ -6,6 +6,18 @@
             </div>
             <div class="modal-body">
                 <fieldset>
+                    <ui-select ng-model="address.selected"
+                               theme="bootstrap"
+                               ng-disabled="disabled"
+                               reset-search-input="false"
+                               style="width: 300px;">
+                        <ui-select-match placeholder="Autor eingeben ...">{{$select.selected.formatted_address}}</ui-select-match>
+                        <ui-select-choices repeat="author in authors track by $index"
+                                           refresh="refreshAuthors($select.search)"
+                                           refresh-delay="0">
+                            <div ng-bind-html="address.formatted_address | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
                     <div class="form-group">
                         <label for="Author" class="col-sm-2 control-label">Autor</label>
                         <div class="col-sm-10">

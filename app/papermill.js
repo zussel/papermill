@@ -54,3 +54,7 @@ papermill.config(['$httpProvider', function($httpProvider) {
         }
     });
 }]);
+
+papermill.config(function(uiSelectConfig) {
+    uiSelectConfig.theme = 'bootstrap';
+});
