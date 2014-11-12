@@ -33,7 +33,7 @@ $app->group('/profile', function () use ($app) {
      * select * from profile where name like %Hans% or first_name like %Hans% or last_name like %Andersen%
      * $tokens =  preg_match_all('/(\w+)(==|!=|=gt=|=ge=|=le=|=lt=)([\w\.]+)([,;])?/', $query, $matches, PREG_SET_ORDER);
      */
-    $app->get('/find/', function () use ($app) {
+    $app->get('/find', function () use ($app) {
         // get query
         $term = $app->request()->get('term');
         // parse query
@@ -41,17 +41,15 @@ $app->group('/profile', function () use ($app) {
             $profiles = Model::factory('Profile')
                 ->where_raw('(name like ? OR first_name like ? OR last_name like ?)',
                     array('%'.$term.'%', '%'.$term.'%', '%'.$term.'%'))
-                ->find_many();
-            $profiles = array_map(function($a) {
-                    $arr = $a->serialize();
-                    return $arr;
-                }, $profiles
-            );
+                ->find_array();
+            for ($i = 0; $i < count($profiles); ++$i) {
+                $profiles[$i]['full_name'] = $profiles[$i]['first_name'].' '.$profiles[$i]['last_name'];
+            }
             echo json_encode($profiles);
         } else {
             $profiles = Model::factory('Profile')
                 ->order_by_asc("last_name")
-                ->find_many();
+                ->find_array();
             $profiles = array_map(function($a) {
                     $arr = $a->serialize();
                     return $arr;

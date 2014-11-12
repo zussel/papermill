@@ -7,7 +7,6 @@
     <!-- Bootstrap -->
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="bower_components/ng-tags-input/ng-tags-input.min.css" rel="stylesheet" media="screen">
-    <link href="bower_components/angular-ui-select/dist/select.min.css" rel="stylesheet">
     <link href="css/yeti/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/app.css" rel="stylesheet" media="screen">
 </head>
@@ -28,11 +27,14 @@
                     <li ng-show="!loggedIn()" ng-class="{active: isActive('/login')}"><a href="#/login">Anmelden</a></li>
                     <li ng-show="loggedIn()" class="dropdown">
                         <a href class="dropdown-toggle" data-toggle="dropdown">
-                            <span class="glyphicon glyphicon-user"></span>&nbsp;
-                            <small>Hallo</small> {{user().profile.name}}
+                            <i class="glyphicon glyphicon-user"></i>&nbsp;
+                            {{user().profile.name}}
                             <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href ng-click="logout()">Abmelden</a></li>
+                            <li><a href ng-click="logout()">
+                                <i class="glyphicon glyphicon-log-out"></i>&nbsp;
+                                Abmelden</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -49,6 +51,7 @@
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="bower_components/jquery/jquery.min.js"></script>
+    <script src="bower_components/lodash/dist/lodash.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/angular/angular.min.js"></script>
@@ -57,7 +60,9 @@
     <script src="bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.min.js"></script>
     <script src="bower_components/danialfarid-angular-file-upload/dist/angular-file-upload.min.js"></script>
     <script src="bower_components/ng-tags-input/ng-tags-input.min.js"></script>
-    <script src="bower_components/angular-ui-select/dist/select.min.js"></script>
+
+    <!-- utils -->
+    <script src="app/js/NameParser.js"></script>
 
     <!-- App stuff -->
     <script src="app/papermill.js"></script>
@@ -66,6 +71,7 @@
     <script src="app/modules/auth/services/Auth.js"></script>
     <script src="app/modules/auth/controller/UserCtrl.js"></script>
     <script src="app/modules/papers/services/Paper.js"></script>
+    <script src="app/modules/papers/services/Authors.js"></script>
     <script src="app/modules/login/controller/LoginCtrl.js"></script>
     <script src="app/modules/login/controller/SigninCtrl.js"></script>
 </body>

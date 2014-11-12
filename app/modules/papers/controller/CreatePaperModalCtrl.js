@@ -1,8 +1,8 @@
 var app = angular.module('papermill');
 
 app.controller('CreatePaperModalCtrl', [
-    '$scope', '$http', '$modalInstance', '$upload', 'Paper',
-    function($scope, $http, $modalInstance, $upload, Paper) {
+    '$scope', '$http', '$modalInstance', '$upload', 'Authors',
+    function($scope, $http, $modalInstance, $upload, Authors) {
 
         $scope.paper = {};
 
@@ -14,14 +14,16 @@ app.controller('CreatePaperModalCtrl', [
             $scope.paper.file = $files[0];
         };
 
-        $scope.refreshAuthors = function(term) {
-            var params = {term: term};
-            return $http.get(
-                '/api/author',
-                {params: params}
-            ).then(function(response) {
-                $scope.authors = response.data.results;
-            });
+        $scope.queryAuthors = function($query) {
+            return Authors.find({term: $query}).$promise;
+        };
+
+        $scope.onTagAdded = function(tag) {
+            var parsed = NameParse.parse(tag.full_name);
+            console.log(parsed);
+            tag = parsed;
+            tag.full_name = tag.firstName + ' ' + tag.lastName;
+            $scope.paper.authors[$scope.paper.authors.length - 1] = tag;
         };
 
         $scope.ok = function () {
