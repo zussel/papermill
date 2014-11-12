@@ -103,6 +103,16 @@ $app->group('/paper', function () use ($app) {
                 $app->response->setStatus(400);
                 echo '{"error":"'.$e->getMessage().'"}';
             }
+            /*
+             * validate authors
+             */
+            foreach($paper->authors as $author) {
+                if ($author['id'] === null) {
+                    // new author insert on db
+                    $newAuthor = Model::factory('Author')->create();
+
+                }
+            }
         }
     });
 
