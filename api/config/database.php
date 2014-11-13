@@ -28,10 +28,10 @@ function setup_db() {
     $db->exec('CREATE TABLE IF NOT EXISTS profile (
                id INTEGER PRIMARY KEY,
                user_id INTEGER,
-               name VARCHAR(256),
                first_name VARCHAR(256),
                last_name VARCHAR(256),
-               active INTEGER);');
+               active INTEGER);'
+    );
 
     $db->exec('CREATE TABLE IF NOT EXISTS paper (
                id INTEGER PRIMARY KEY,

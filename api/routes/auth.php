@@ -73,6 +73,7 @@ $app->group('/auth', function () use ($app) {
          * - last name
          */
         $data = $app->request->getBody();
+        $app->response->header("Content-Type", "application/json");
 
         if ($data == null) {
             $app->response->setStatus(400);
@@ -100,29 +101,37 @@ $app->group('/auth', function () use ($app) {
                 echo '{"error":"user already exists"}';
             } else {
                 /*
-                 * create user and author
-                 * return success and user
+                 * create user and profile
+                 * return success and user and profile
                  */
                 $user = Model::factory('User')->create();
-                try {
-                    $user->deserialize($arr);
-                    /*
-                     * handle password separately
-                     */
-                    $user->passwd_salt = openssl_random_pseudo_bytes(16);
-                    $user->passwd = sha1($arr['passwd'] . $user->passwd_salt);
-                    $user->save();
+                $user->email = $arr['user']['email'];
+                // set password
+                $user->passwd_salt = openssl_random_pseudo_bytes(16);
+                $user->passwd = sha1($arr['user']['passwd'] . $user->passwd_salt);
 
-                    $arr['user_id'] = $user->id;
-
-                    $author = Model::factory('Profile')->create();
-                    $author->deserialize($arr);
-                    $author->save();
-
-                    echo $user->serialize();
-                } catch (ModelException $e) {
+                if (!$user->save()) {
                     $app->response->setStatus(400);
-                    echo '{"error":"'.$e->getMessage().'"}';
+                    echo '{"error":"couldn\' create user"}';
+                } else {
+
+                    $profile = Model::factory('Profile')->create($arr['profile']);
+                    $profile->active = true;
+                    $profile->user_id = $user->id;
+
+                    if (!$profile->save()) {
+                        $user->delete();
+                        $app->response->setStatus(400);
+                        echo '{"error":"couldn\' create profile"}';
+                    }
+                    $result = json_encode(array(
+                        'user' => array(
+                            'email' => $user->email,
+                            'id' => $user->id,
+                        ),
+                        'profile' => $profile->as_array()
+                    ));
+                    echo $result;
                 }
             }
         }

@@ -8,12 +8,26 @@
 
 class AuthTest extends Slim_Framework_TestCase
 {
-    /*
     public function testPost_Signin_SUCCESS()
     {
+        $user_profile = json_encode(array(
+            'user' => array(
+                'email' => 'max@mustermann.de',
+                'passwd' => 'secret'
+            ),
+            'profile' => array(
+                'first_name' => 'Max',
+                'last_name' => 'Mustermann'
+            )
+        ));
 
+        $this->post('/auth/signin', $user_profile, '', array(
+            'Content-Type' => 'application/json'
+        ));
+
+        $result = $this->response->getBody();
+        var_dump($result);
     }
-    */
 
     public function testPost_Login_SUCCESS()
     {

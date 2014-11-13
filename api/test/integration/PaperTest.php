@@ -18,7 +18,7 @@ class PaperTest extends Slim_Framework_TestCase
             'url' => '/path/to/file'
         ));
 
-        $this->post('/paper', $paper, array(
+        $this->post('/paper', $paper, '', array(
             'Content-Type' => 'application/json',
             'HTTP_AUTHORIZATION' => 'Bearer '.$token
         ));
