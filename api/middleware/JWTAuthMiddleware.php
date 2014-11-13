@@ -45,7 +45,7 @@ class JWTAuthMiddleware extends \Slim\Middleware
             }
         } else if (!$this->hasAuthentication($headers)) {
             // not authenticated
-            $this->app->response()->status(401);
+            $this->app->response()->status(400);
             $this->app->response()->body(json_encode(array(
                 'error' => 'not authenticated'
             )));
@@ -54,15 +54,15 @@ class JWTAuthMiddleware extends \Slim\Middleware
                 if ($this->authenticate($headers)) {
                     $this->next->call();
                 } else {
-                    $this->app->response()->status(401);
+                    $this->app->response()->status(400);
                     $this->app->response()->body(json_encode(array('error' => 'invalid aud')));
                 }
             } catch (UnexpectedValueException $ex) {
-                $this->app->response()->status(401);
+                $this->app->response()->status(400);
                 $this->app->response()->body(json_encode(array('error' => 'unexpected value: '.$ex->getMessage())));
 
             } catch (DomainException $ex) {
-                $this->app->response()->status(401);
+                $this->app->response()->status(400);
                 $this->app->response()->body(json_encode(array('error' => 'domain exception: '.$ex->getMessage())));
             }
         }

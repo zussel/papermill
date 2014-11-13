@@ -72,10 +72,10 @@ $app->group('/auth', function () use ($app) {
          * - first name
          * - last name
          */
-        $data = $app->request()->getBody();
+        $data = $app->request->getBody();
 
         if ($data == null) {
-            $app->response->setStatus(401);
+            $app->response->setStatus(400);
             echo '{"error": "no credentials"}';
         } else {
             if (is_string($data)) {
@@ -86,13 +86,17 @@ $app->group('/auth', function () use ($app) {
             /*
              * check if user exists
              */
-            $user = User::where('email', $arr['email'])->find_one();
+            if (!$arr['user'] || !$arr['user']['email']) {
+                echo '{"error": "missing email"}';
+                return;
+            }
+            $user = User::where('email', $arr['user']['email'])->find_one();
 
             if ($user) {
                 /*
                  * user exists response error
                  */
-                $app->response->setStatus(401);
+                $app->response->setStatus(400);
                 echo '{"error":"user already exists"}';
             } else {
                 /*
