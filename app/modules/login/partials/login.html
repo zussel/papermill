@@ -24,9 +24,17 @@
                     </div>
                 </div>
 
+                <div class="form-group" ng-show="error.message">
+                    <div class="col-sm-12">
+                        <div class="alert alert-danger" role="alert">
+                            <strong>Fehler:</strong> {{error.message}}
+                        </div>
+                    </div>
+                </div>
+
                 <div class="btn-toolbar pull-right">
                     <div class="btn-group">
-                        <button class="btn btn-sm btn-link" ng-click="register()">Registrieren</button>
+                        <button class="btn btn-sm btn-link" type="button" ng-click="register()">Registrieren</button>
                     </div>
                     <div class="btn-group">
                         <button class="btn btn-sm btn-success" type="submit">Anmelden</button>

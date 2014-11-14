@@ -23,6 +23,9 @@ papermill.config(['$routeProvider', function($routeProvider) {
     }).when('/login', {
         templateUrl: 'app/modules/login/partials/login.html',
         controller: 'LoginCtrl'
+    }).when('/confirm', {
+        templateUrl: 'app/modules/login/partials/confirm.html',
+        controller: 'ConfirmCtrl'
     }).otherwise({
         redirectTo: '/login'
     });
@@ -35,7 +38,6 @@ papermill.config(['$httpProvider', function($httpProvider) {
                 request.headers = request.headers || {};
                 request.headers['Accept-Language'] = "de-de";
                 if ($window.sessionStorage.token) {
-//                    request.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
                     request.headers['Authorization'] = 'Bearer ' + $window.sessionStorage.token;
                 }
                 return request;

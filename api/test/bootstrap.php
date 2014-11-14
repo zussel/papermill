@@ -70,10 +70,11 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         // Prepare a mock environment
         \Slim\Environment::mock(array_merge(array(
             'REQUEST_METHOD' => strtoupper($method),
+            'CONTENT_TYPE'   => 'application/json',
             'PATH_INFO'      => $path,
             'SERVER_NAME'    => 'localhost',
 //            'SERVER_NAME'    => 'papermill.local',
-            'QUERY_STRING'   => $query,
+            'QUERY_STRING'   => (isset($query) ? $query : ''),
             'slim.input'     => $body
         ), $optionalHeaders));
 
@@ -91,22 +92,10 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
     // Implement our `get`, `post`, and other http operations
     public function __call($method, $arguments) {
         if (in_array($method, $this->testingMethods)) {
-            list($path, $formVars, $query, $headers) = array_pad($arguments, 3, array());
+            list($path, $formVars, $query, $headers) = array_pad($arguments, 4, array());
             return $this->request($method, $path, $formVars, $query, $headers);
         }
         throw new \BadMethodCallException(strtoupper($method) . ' is not supported');
-    }
-
-    protected function login($email, $passwd) {
-        $user = array(
-            'email' => $email,
-            'passwd' => $passwd
-        );
-        $json = json_encode($user);
-
-        $this->post('/auth/login', $json, array('Content-Type' => 'application/json'));
-
-        return json_decode($this->response->getBody());
     }
 
     protected function configure_database() {

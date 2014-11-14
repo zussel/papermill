@@ -5,7 +5,13 @@ app.controller('LoginCtrl', ['$scope', '$location', 'AuthService', function($sco
     $scope.credentials = {};
 
     $scope.login = function() {
-        AuthService.login($scope.credentials);
+        AuthService.login($scope.credentials).then(function() {
+            $location.path('/papers');
+        }, function(response) {
+            $scope.error = {
+                message: response.data.error
+            }
+        });
     };
 
     $scope.register = function() {

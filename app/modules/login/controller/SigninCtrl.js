@@ -1,6 +1,6 @@
 var app = angular.module('papermill');
 
-app.controller('SigninCtrl', ['$scope', 'AuthService', function($scope, AuthService) {
+app.controller('SigninCtrl', ['$scope', '$location', 'AuthService', function($scope, $location, AuthService) {
 
     $scope.error = {};
 
@@ -12,7 +12,7 @@ app.controller('SigninCtrl', ['$scope', 'AuthService', function($scope, AuthServ
         $scope.profile.first_name = parsed.firstName;
         $scope.profile.last_name = parsed.lastName;
         AuthService.signin($scope.profile).success(function() {
-            $location.path('/login');
+            $location.path('/confirm');
         }).error(function(data) {
             $scope.error.message = data.error;
         });

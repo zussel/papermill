@@ -9,18 +9,13 @@ angular.module('papermill').factory("AuthService", function ($q, $http, $locatio
     return {
         user: user,
         login: function(credentials) {
-            $http.post('/api/auth/login', credentials)
-                .success(function(data) {
-                    /*
-                     * login successfull
-                     * store token and user id
-                     */
-                    $window.sessionStorage.token = data.token;
-                    $location.path('/papers');
-                })
-                .error(function() {
-                    console.log('couldn\'t login');
-                });
+            return $http.post('/api/auth/login', credentials).success(function(response) {
+                /*
+                 * login successfull
+                 * store token and user id
+                 */
+                $window.sessionStorage.token = response.token;
+            });
         },
         logout: function() {
             $http.get('/api/auth/logout/' + user.id)
@@ -56,6 +51,9 @@ angular.module('papermill').factory("AuthService", function ($q, $http, $locatio
                  * profile wasn't retrieved yet
                  * retrieve profile now
                  */
+                if (angular.isUndefined($window.sessionStorage.token)) {
+                    defer.reject("user isn't authenticated");
+                }
                 var payload = angular.fromJson($window.atob($window.sessionStorage.token.split('.')[1]));
                 user.id = payload.id;
                 $http.get('/api/user/' + user.id + '/profile').success(function(data) {
@@ -69,7 +67,7 @@ angular.module('papermill').factory("AuthService", function ($q, $http, $locatio
                  * user isn't logged in
                  */
                 console.log("user isn't authenticated");
-                defer.reject();
+                defer.reject("user isn't authenticated");
             }
             return defer.promise;
         }

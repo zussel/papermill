@@ -15,27 +15,30 @@ $app->group('/auth', function () use ($app) {
         /*
          *
          */
-        $data = $app->request()->getBody();
+        $json = $app->request()->getBody();
 
-        if ($data == null) {
-            $app->response->setStatus(404);
+        if ($json == null) {
+            $app->response->setStatus(400);
             echo '{"error": "no credentials"}';
+        } else if (is_string($json)) {
+            $json = json_decode($json, true);
+        } else if (!isset($json['email'])) {
+            $app->response->setStatus(400);
+            echo '{"error": "missing email"}';
+        } else if (!isset($json['passwd'])) {
+            $app->response->setStatus(400);
+            echo '{"error": "missing password"}';
         } else {
-            if (is_string($data)) {
-                $arr = json_decode($data, true);
-            } else {
-                $arr = $data;
-            }
             /*
              * get user
              */
-            $user = User::where('email', $arr['email'])->find_one();
+            $user = User::where('email', $json['email'])->find_one();
 
             if ($user) {
                 /*
                  * check password
                  */
-                $hashed = sha1($arr['passwd'] . $user->passwd_salt);
+                $hashed = sha1($json['passwd'] . $user->passwd_salt);
                 if ($user->passwd != $hashed) {
                     $app->response->setStatus(400);
                     echo '{"error":"invalid password"}';
@@ -72,26 +75,28 @@ $app->group('/auth', function () use ($app) {
          * - first name
          * - last name
          */
-        $data = $app->request->getBody();
+        $json = $app->request->getBody();
         $app->response->header("Content-Type", "application/json");
 
-        if ($data == null) {
+        if ($json == null) {
             $app->response->setStatus(400);
             echo '{"error": "no credentials"}';
-        } else {
-            if (is_string($data)) {
-                $arr = json_decode($data, true);
-            } else {
-                $arr = $data;
-            }
+        } else if (is_string($json)) {
+            $json = json_decode($json, true);
             /*
              * check if user exists
              */
-            if (!$arr['user'] || !$arr['user']['email']) {
-                echo '{"error": "missing email"}';
-                return;
-            }
-            $user = User::where('email', $arr['user']['email'])->find_one();
+        } else if (!isset($json['user'])) {
+            $app->response->setStatus(400);
+            echo '{"error": "missing user data"}';
+        } else if (!isset($json['profile'])) {
+            $app->response->setStatus(400);
+            echo '{"error": "missing profile data"}';
+        } else if (!isset($json['user']['email'])) {
+            $app->response->setStatus(400);
+            echo '{"error": "missing user email"}';
+        } else {
+            $user = User::where('email', $json['user']['email'])->find_one();
 
             if ($user) {
                 /*
@@ -99,23 +104,26 @@ $app->group('/auth', function () use ($app) {
                  */
                 $app->response->setStatus(400);
                 echo '{"error":"user already exists"}';
+            } else if (!isset($json['user']['passwd'])) {
+                $app->response->setStatus(400);
+                echo '{"error": "missing user passwd"}';
             } else {
                 /*
                  * create user and profile
                  * return success and user and profile
                  */
                 $user = Model::factory('User')->create();
-                $user->email = $arr['user']['email'];
+                $user->email = $json['user']['email'];
                 // set password
                 $user->passwd_salt = openssl_random_pseudo_bytes(16);
-                $user->passwd = sha1($arr['user']['passwd'] . $user->passwd_salt);
+                $user->passwd = sha1($json['user']['passwd'] . $user->passwd_salt);
 
                 if (!$user->save()) {
                     $app->response->setStatus(400);
                     echo '{"error":"couldn\' create user"}';
                 } else {
 
-                    $profile = Model::factory('Profile')->create($arr['profile']);
+                    $profile = Model::factory('Profile')->create($json['profile']);
                     $profile->active = true;
                     $profile->user_id = $user->id;
 
@@ -124,14 +132,13 @@ $app->group('/auth', function () use ($app) {
                         $app->response->setStatus(400);
                         echo '{"error":"couldn\' create profile"}';
                     }
-                    $result = json_encode(array(
+                    echo json_encode(array(
                         'user' => array(
                             'email' => $user->email,
                             'id' => $user->id,
                         ),
                         'profile' => $profile->as_array()
                     ));
-                    echo $result;
                 }
             }
         }
