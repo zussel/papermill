@@ -19,10 +19,11 @@ app.controller('CreatePaperModalCtrl', [
         };
 
         $scope.onTagAdded = function(tag) {
-            var parsed = NameParse.parse(tag.full_name);
-            console.log(parsed);
-            tag = parsed;
-            tag.full_name = tag.firstName + ' ' + tag.lastName;
+            if (angular.isUndefined(tag.id)) {
+                var parsed = NameParse.parse(tag.full_name);
+                tag.first_name = parsed.firstName;
+                tag.last_name = parsed.lastName;
+            }
             $scope.paper.authors[$scope.paper.authors.length - 1] = tag;
         };
 

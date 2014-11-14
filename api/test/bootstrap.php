@@ -20,6 +20,10 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
     // `__call()` magic method below.
     private $testingMethods = array('get', 'post', 'patch', 'put', 'delete', 'head');
 
+    private $optionalHeader = array(
+//        'CONTENT_TYPE'   => 'application/json',
+    );
+
     // Run for each unit test to setup our slim app environment
     public function setup()
     {
@@ -52,6 +56,7 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         // Establish a local reference to the Slim app object
         $this->app = $app;
 
+        $this->optionalHeader = $this->prepare_header($this->optionalHeader);
         $this->configure_database();
     }
 
@@ -70,13 +75,11 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         // Prepare a mock environment
         \Slim\Environment::mock(array_merge(array(
             'REQUEST_METHOD' => strtoupper($method),
-            'CONTENT_TYPE'   => 'application/json',
             'PATH_INFO'      => $path,
             'SERVER_NAME'    => 'localhost',
-//            'SERVER_NAME'    => 'papermill.local',
             'QUERY_STRING'   => (isset($query) ? $query : ''),
             'slim.input'     => $body
-        ), $optionalHeaders));
+        ), array_merge($this->optionalHeader, $optionalHeaders)));
 
         // Establish some useful references to the slim app properties
         $this->request  = $this->app->request();
@@ -96,6 +99,17 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
             return $this->request($method, $path, $formVars, $query, $headers);
         }
         throw new \BadMethodCallException(strtoupper($method) . ' is not supported');
+    }
+
+    protected function appendHeader($optionalHeader) {
+        if (!is_array($optionalHeader)) {
+            return;
+        }
+        $this->optionalHeader = array_merge($this->optionalHeader, $optionalHeader);
+    }
+
+    protected function prepare_header($optionalHeader) {
+        return $optionalHeader;
     }
 
     protected function configure_database() {

@@ -1,29 +1,6 @@
 <?php
 
 class Paper extends Model {
-
-    /**
-     * serialize to a json object
-     */
-    public function serialize() {
-        $arr = $this->as_array();
-        $arr["year"] = intval($arr["year"]);
-        return json_encode($arr);
-    }
-    /**
-     * deserialze from a json object
-     */
-    public function deserialize($json) {
-        $fields = array('title', 'year', 'title', 'url');
-        foreach($fields as $field) {
-            if (array_key_exists($field, $json)) {
-                $this->$field = $json[$field];
-            } else {
-                throw new ModelException('couldn\'t find field \''.$field.'\'');
-            }
-        }
-    }
-
     public function authors() {
         return $this->has_many_through('Profile');
     }
@@ -35,7 +12,7 @@ class Profile extends Model {
     }
 
     public function deserialize($json) {
-        $fields = array('name', 'first_name', 'last_name', 'user_id', 'active');
+        $fields = array('first_name', 'last_name', 'user_id', 'active');
         foreach($fields as $field) {
             if (array_key_exists($field, $json)) {
                 $this->$field = $json[$field];

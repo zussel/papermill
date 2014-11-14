@@ -33,6 +33,19 @@ $app->group('/profile', function () use ($app) {
      * select * from profile where name like %Hans% or first_name like %Hans% or last_name like %Andersen%
      * $tokens =  preg_match_all('/(\w+)(==|!=|=gt=|=ge=|=le=|=lt=)([\w\.]+)([,;])?/', $query, $matches, PREG_SET_ORDER);
      */
+    /*
+     * get profile by id
+     */
+    $app->get('/:id', function ($id) use ($app) {
+        $profile = Model::factory('Profile')->find_one($id);
+        if ($profile != null) {
+            echo json_encode($profile->as_array());
+        } else {
+            $app->response->setStatus(404);
+            echo '{"error": "unknown profile with id '.$id.'"}';
+        }
+    })->conditions(array('id' => '[1-9][0-9]*'));
+
     $app->get('/find', function () use ($app) {
         // get query
         $term = $app->request()->get('term');
@@ -59,41 +72,24 @@ $app->group('/profile', function () use ($app) {
         }
     });
 
-    /*
-     * get profile by id
-     */
-    $app->get('/:id', function ($id) use ($app) {
-        $profile = Model::factory('Profile')->find_one($id);
-        if ($profile != null) {
-            echo $profile->serialize();
-        } else {
-            $app->response->setStatus(404);
-        }
-    });
-
     $app->post('', function () use ($app) {
-        $data = $app->request()->getBody();
+        $json = $app->request()->getBody();
 
-        if ($data == null) {
-            $app->response->setStatus(404);
-            echo 'data null';
+        if ($json == null) {
+            $app->response->setStatus(400);
+            echo '{"error": "no profile data"}';
+        } else if (is_string($json)) {
+            $json = json_decode($json, true);
         } else {
-            if (is_string($data)) {
-              $arr = json_decode($data, true);
-            } else {
-              $arr = $data;
-            }
             /*
              * parse json data
              */
-            $profile = Model::factory('Profile')->create();
-            try {
-                $profile->deserialize($arr);
-                $profile->save();
-                echo $profile->serialize();
-            } catch (ModelException $e) {
+            $profile = Model::factory('Profile')->create($json);
+            if (!$profile->save()) {
                 $app->response->setStatus(400);
-                echo '{"error":"'.$e->getMessage().'"}';
+                echo '{"error":"couldn\'t create profile"}';
+            } else {
+                echo json_encode($profile->as_array());
             }
         }
     });

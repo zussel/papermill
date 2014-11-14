@@ -1,46 +1,54 @@
 <?php
 class ProfileTest extends Slim_Framework_TestCase
 {
-    public function testPost_SUCCESS()
+
+    protected function prepare_header($optionalHeader) {
+        $token = $this->createJWTToken(1);
+
+        $optionalHeader['HTTP_AUTHORIZATION']  = 'Bearer ' . $token;
+
+        return parent::prepare_header($optionalHeader);
+    }
+
+    public function testPost_SUCCESS_WITH_USERID()
     {
         $profile = json_encode(array(
-            'name' => 'Otto Hagel',
-            'first_name' => 'Hagel',
+            'first_name' => 'Otto',
             'last_name' => 'Hagel',
             'user_id' => 0,
             'active' => 0
         ));
 
-        $token = $this->createJWTToken(1);
-//        $token = $this->login('a@a.de', 'secret');
 
-        $p = json_decode($this->post('/profile', $profile, array(
-            'Content-Type' => 'application/json',
-            'HTTP_AUTHORIZATION'  => 'Bearer ' . $token)
-        ));
-        var_dump($p);
+        json_decode($this->post('/profile', $profile));
 
         $this->assertEquals(200, $this->response->status());
-        $this->assertTrue($p->id > 0);
+
+        $data = json_decode($this->response->getBody(), true);
+        $this->assertNotNull($data);
+        $this->assertGreaterThan(0, $data['id']);
     }
 
-    public function testPost_FAILURE()
+    public function testPost_SUCCESS()
     {
         $profile = json_encode(array(
-            'first_name' => 'Hagel',
+            'first_name' => 'Otto',
             'last_name' => 'Hagel',
             'active' => 0
         ));
 
-        $this->post('/profile', $profile, array('Content-Type' => 'application/json'));
-        $this->assertEquals(400, $this->response->status());
+        $this->post('/profile', $profile);
+
+        $this->assertEquals(200, $this->response->status());
+
+        $data = json_decode($this->response->getBody(), true);
+        $this->assertNotNull($data);
+        $this->assertGreaterThan(0, $data['id']);
     }
 
     public function testGet_SUCCESS()
     {
-        $res = $this->get('/profile/1', '', '', array(
-            'HTTP_AUTHORIZATION' => 'Bearer '.$this->createJWTToken(1))
-        );
+        $res = $this->get('/profile/1');
         $this->assertEquals(200, $this->response->status());
 
         $arr = json_decode($res, true);
@@ -56,17 +64,13 @@ class ProfileTest extends Slim_Framework_TestCase
 
     public function testFindAll_SUCCESS()
     {
-        $res = $this->get('/profile/find', null, array(
-            'HTTP_AUTHORIZATION' => 'Bearer '.$this->createJWTToken(1)
-        ));
+        $res = $this->get('/profile/find');
         var_dump($res);
     }
 
     public function testFindSome_SUCCESS()
     {
-        $res = $this->get('/profile/find', '', 'term=arr', array(
-            'HTTP_AUTHORIZATION' => 'Bearer '.$this->createJWTToken(1)
-        ));
+        $res = $this->get('/profile/find', '', 'term=arr');
         $arr = json_decode($res, true);
 
         var_dump(json_decode($arr[0], true));
@@ -80,10 +84,10 @@ class ProfileTest extends Slim_Framework_TestCase
         /*
          * insert some paper data
          */
-        $db->exec('INSERT INTO profile (name, first_name, last_name, user_id, active) VALUES ("bruce", "Bruce", "Willis", 0, 0)');
-        $db->exec('INSERT INTO profile (name, first_name, last_name, user_id, active) VALUES ("arnold", "Arnold", "Schwarzenegger", 0, 0)');
-        $db->exec('INSERT INTO profile (name, first_name, last_name, user_id, active) VALUES ("sly", "Sylvester", "Stalone", 0, 0)');
-        $db->exec('INSERT INTO profile (name, first_name, last_name, user_id, active) VALUES ("steve", "Steve", "Carrel", 0, 0)');
-        $db->exec('INSERT INTO profile (name, first_name, last_name, user_id, active) VALUES ("jim", "Jim", "Carrey", 0, 0)');
+        $db->exec('INSERT INTO profile (first_name, last_name, user_id, active) VALUES ("Bruce", "Willis", 0, 0)');
+        $db->exec('INSERT INTO profile (first_name, last_name, user_id, active) VALUES ("Arnold", "Schwarzenegger", 0, 0)');
+        $db->exec('INSERT INTO profile (first_name, last_name, user_id, active) VALUES ("Sylvester", "Stalone", 0, 0)');
+        $db->exec('INSERT INTO profile (first_name, last_name, user_id, active) VALUES ("Steve", "Carrel", 0, 0)');
+        $db->exec('INSERT INTO profile (first_name, last_name, user_id, active) VALUES ("Jim", "Carrey", 0, 0)');
     }
 }

@@ -9,8 +9,8 @@ app.controller('SigninCtrl', ['$scope', '$location', 'AuthService', function($sc
     $scope.signin = function() {
         delete $scope.error.message;
         var parsed = NameParse.parse($scope.profile.profile.name);
-        $scope.profile.first_name = parsed.firstName;
-        $scope.profile.last_name = parsed.lastName;
+        $scope.profile.profile.first_name = parsed.firstName;
+        $scope.profile.profile.last_name = parsed.lastName;
         AuthService.signin($scope.profile).success(function() {
             $location.path('/confirm');
         }).error(function(data) {

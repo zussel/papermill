@@ -5,6 +5,21 @@
  * Date: 31.03.14
  * Time: 21:46
  */
+
+function get_tables() {
+    return array(
+        'profile_paper',
+        'paper_tag',
+        'paper',
+        'tag_user',
+        'tag',
+        'user_role',
+        'role',
+        'profile',
+        'user'
+    );
+}
+
 function setup_db() {
     $db = ORM::get_db();
 
@@ -19,11 +34,15 @@ function setup_db() {
      */
     $db->exec('CREATE TABLE IF NOT EXISTS user (
                id INTEGER PRIMARY KEY,
-               role INTEGER,
                email VARCHAR(256),
                passwd CHAR(40),
                passwd_salt BLOB);');
 //               passwd_salt CHAR(32));');
+
+    $db->exec('CREATE TABLE IF NOT EXISTS user_role (
+              user_id integer,
+              role_id integer);');
+
 
     $db->exec('CREATE TABLE IF NOT EXISTS profile (
                id INTEGER PRIMARY KEY,
@@ -48,6 +67,10 @@ function setup_db() {
                id INTEGER PRIMARY KEY,
                name VARCHAR(256));');
 
+    $db->exec('CREATE TABLE IF NOT EXISTS tag_user (
+              tag_id integer,
+              user_id integer);');
+
     $db->exec('CREATE TABLE IF NOT EXISTS paper_tag (
               paper_id integer,
               tag_id integer);');
@@ -61,21 +84,15 @@ function clear_tables()
 {
     $db = ORM::get_db();
 
-    $db->exec('DELETE FROM user');
-    $db->exec('DELETE FROM profile');
-    $db->exec('DELETE FROM paper');
-    $db->exec('DELETE FROM tag');
-    $db->exec('DELETE FROM paper_tag');
-    $db->exec('DELETE FROM profile_paper');
+    foreach(get_tables() as $table) {
+        $db->exec('DELETE FROM '.$table);
+    }
 }
 
 function drop_db() {
     $db = ORM::get_db();
 
-    $db->exec('DROP TABLE paper_tag');
-    $db->exec('DROP TABLE profile_paper');
-    $db->exec('DROP TABLE paper');
-    $db->exec('DROP TABLE tag');
-    $db->exec('DROP TABLE user');
-    $db->exec('DROP TABLE profile');
+    foreach(get_tables() as $table) {
+        $db->exec('DROP TABLE '.$table);
+    }
 }

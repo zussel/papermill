@@ -93,7 +93,7 @@ class AuthTest extends Slim_Framework_TestCase
         $this->assertEquals(400, $this->response->status());
 
         $data = json_decode($this->response->getBody(), true);
-        $this->assertNotNull($data, $this->response->status());
+        $this->assertNotNull($data);
         $this->assertEquals($data['error'], 'invalid password');
     }
 
