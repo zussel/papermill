@@ -81,21 +81,17 @@ $app->group('/paper', function () use ($app) {
         if ($json == null) {
             $app->response->setStatus(404);
             echo 'data null';
+        } else if (is_string($json)) {
+            $json = json_decode($json, true);
         } else {
-            if (is_string($json)) {
-              $arr = json_decode($json, true);
-            } else {
-              $arr = $json;
-            }
-
-            $arr['url'] = $papers[0]['url'];
-//            $arr['name'] = $papers[0]['name'];
-
+            $json['url'] = $papers[0]['url'];
             /*
              * parse json data
              */
             $paper = Model::factory('Paper')->create();
             try {
+                $paper->title = $json['title'];
+                $paper->year = $json['yearmo'];
                 $paper->deserialize($arr);
                 $paper->save();
                 echo $paper->serialize();

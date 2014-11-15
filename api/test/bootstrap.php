@@ -21,7 +21,7 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
     private $testingMethods = array('get', 'post', 'patch', 'put', 'delete', 'head');
 
     private $optionalHeader = array(
-//        'CONTENT_TYPE'   => 'application/json',
+        'CONTENT_TYPE'   => 'application/json',
     );
 
     // Run for each unit test to setup our slim app environment
@@ -78,7 +78,7 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
             'PATH_INFO'      => $path,
             'SERVER_NAME'    => 'localhost',
             'QUERY_STRING'   => (isset($query) ? $query : ''),
-            'slim.input'     => $body
+            'slim.input'     => (isset($body) ? $body: '')
         ), array_merge($this->optionalHeader, $optionalHeaders)));
 
         // Establish some useful references to the slim app properties

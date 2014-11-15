@@ -52,8 +52,8 @@ $app->group('/profile', function () use ($app) {
         // parse query
         if (isset($term)) {
             $profiles = Model::factory('Profile')
-                ->where_raw('(name like ? OR first_name like ? OR last_name like ?)',
-                    array('%'.$term.'%', '%'.$term.'%', '%'.$term.'%'))
+                ->where_raw('(first_name like ? OR last_name like ?)',
+                    array('%'.$term.'%', '%'.$term.'%'))
                 ->find_array();
             for ($i = 0; $i < count($profiles); ++$i) {
                 $profiles[$i]['full_name'] = $profiles[$i]['first_name'].' '.$profiles[$i]['last_name'];
@@ -63,11 +63,9 @@ $app->group('/profile', function () use ($app) {
             $profiles = Model::factory('Profile')
                 ->order_by_asc("last_name")
                 ->find_array();
-            $profiles = array_map(function($a) {
-                    $arr = $a->serialize();
-                    return $arr;
-                }, $profiles
-            );
+            for ($i = 0; $i < count($profiles); ++$i) {
+                $profiles[$i]['full_name'] = $profiles[$i]['first_name'].' '.$profiles[$i]['last_name'];
+            }
             echo json_encode($profiles);
         }
     });

@@ -54,14 +54,18 @@ function setup_db() {
 
     $db->exec('CREATE TABLE IF NOT EXISTS paper (
                id INTEGER PRIMARY KEY,
-               user_id INTEGER,
                created VARCHAR(32),
                year INTEGER,
                title VARCHAR(256),
                name VARCHAR(256),
                size INTEGER,
-               type INTEGER,
+               type VARCHAR(16),
+               extension VARCHAR(16),
                url VARCHAR(256));');
+
+    $db->exec('CREATE TABLE IF NOT EXISTS paper_user (
+              paper_id integer,
+              user_id integer);');
 
     $db->exec('CREATE TABLE IF NOT EXISTS tag (
                id INTEGER PRIMARY KEY,

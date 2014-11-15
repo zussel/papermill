@@ -8,20 +8,35 @@
 
 class PaperTest extends Slim_Framework_TestCase
 {
+    protected function prepare_header($optionalHeader) {
+        $optionalHeader['HTTP_AUTHORIZATION']  = 'Bearer ' . $this->createJWTToken(1);
+        return parent::prepare_header($optionalHeader);
+    }
+
+    public function setUp() {
+        parent::setup();
+
+        $_FILES = array(
+            'file' => array(
+                'name' => 'test.jpg',
+                'type' => 'image/jpeg',
+                'size' => 542,
+                'tmp_name' => __DIR__ . '/_files/source-test.jpg',
+                'error' => 0
+            )
+        );
+    }
+
     public function testPost_SUCCESS()
     {
         $token = $this->createJWTToken(1);
 
         $paper = json_encode(array(
-            'title' => 'Mein erstes paper',
-            'year' => 2014,
-            'url' => '/path/to/file'
+            'title' => 'Mein erstes Paper',
+            'year' => 2014
         ));
 
-        $this->post('/paper', $paper, '', array(
-            'Content-Type' => 'application/json',
-            'HTTP_AUTHORIZATION' => 'Bearer '.$token
-        ));
+        $this->post('/paper', $paper);
         $this->assertEquals(200, $this->response->status());
         $body = $this->response->body();
         var_dump($body);
@@ -34,9 +49,7 @@ class PaperTest extends Slim_Framework_TestCase
             'url' => '/path/to/file'
         ));
 
-        $this->post('/paper', $paper, array(
-            'Content-Type' => 'application/json'
-        ));
+        $this->post('/paper', $paper);
 
         $this->assertEquals(400, $this->response->status());
     }
@@ -45,9 +58,8 @@ class PaperTest extends Slim_Framework_TestCase
     {
 //        $token = $this->login('a@a.de', 'secret');
 
-        $res = $this->get('/paper/1', null, array(
+        $res = $this->get('/paper/1', null, null, array(
             'Content-Type' => 'application/json',
-            'HTTP_AUTHORIZATION'  => 'Bearer '.$this->createJWTToken(1)
         ));
         var_dump($res);
 
@@ -56,7 +68,7 @@ class PaperTest extends Slim_Framework_TestCase
 
     public function testGet_FAILURE()
     {
-        $this->get('/paper/2', null, array(
+        $this->get('/paper/2', null, null, array(
             'Content-Type' => 'application/json'
         ));
 

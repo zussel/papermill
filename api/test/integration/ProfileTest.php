@@ -3,10 +3,7 @@ class ProfileTest extends Slim_Framework_TestCase
 {
 
     protected function prepare_header($optionalHeader) {
-        $token = $this->createJWTToken(1);
-
-        $optionalHeader['HTTP_AUTHORIZATION']  = 'Bearer ' . $token;
-
+        $optionalHeader['HTTP_AUTHORIZATION']  = 'Bearer ' . $this->createJWTToken(1);
         return parent::prepare_header($optionalHeader);
     }
 
@@ -48,7 +45,9 @@ class ProfileTest extends Slim_Framework_TestCase
 
     public function testGet_SUCCESS()
     {
-        $res = $this->get('/profile/1');
+        $res = $this->get('/profile/1', null, null, array(
+            'CONTENT_TYPE'   => 'application/json',
+        ));
         $this->assertEquals(200, $this->response->status());
 
         $arr = json_decode($res, true);
@@ -58,23 +57,28 @@ class ProfileTest extends Slim_Framework_TestCase
 
     public function testGet_FAILURE()
     {
-        $this->get('/profile/4711');
+        $this->get('/profile/4711', null, null, array(
+            'CONTENT_TYPE'   => 'application/json',
+        ));
         $this->assertEquals(404, $this->response->status());
     }
 
     public function testFindAll_SUCCESS()
     {
-        $res = $this->get('/profile/find');
+        $res = $this->get('/profile/find', null, null, array(
+            'CONTENT_TYPE'   => 'application/json',
+        ));
         var_dump($res);
     }
 
     public function testFindSome_SUCCESS()
     {
-        $res = $this->get('/profile/find', '', 'term=arr');
+        $res = $this->get('/profile/find', null, 'term=arr', array(
+            'CONTENT_TYPE'   => 'application/json',
+        ));
         $arr = json_decode($res, true);
 
-        var_dump(json_decode($arr[0], true));
-        //var_dump($arr);
+        var_dump($arr);
     }
 
     protected function configure_database() {
