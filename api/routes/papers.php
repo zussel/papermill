@@ -61,22 +61,12 @@ $app->group('/paper', function () use ($app) {
             return;
         };
 
-        $file = $_FILES['file'];
-        $count = count($file['name']);
+        $upload = new Upload($_FILES['file'], 'uploads/papers/');
 
-        if ($count === 0) {
-            echo '{"error":"missing paper file"}';
+        $uploaded = $upload->upload();
+        if (!$uploaded) {
+            echo '{"error":"couldn\'t upload file"}';
             return;
-        }
-
-        if ($file['error'] === 0) {
-            $name = uniqid();
-            if (move_uploaded_file($file['tmp_name'], 'uploads/papers/' . $name) === true) {
-                $papers[] = array('url' => '/uploads/papers/' . $name, 'name' => $file['name']);
-            } else {
-                echo '{"error":"couldn\'t upload file"}';
-                return;
-            }
         }
 
         $json = $app->request->post('paper');
@@ -89,7 +79,7 @@ $app->group('/paper', function () use ($app) {
         } else if (is_string($json)) {
             $json = json_decode($json, true);
         } else {
-            $json['url'] = $papers[0]['url'];
+            $json['url'] = $uploaded['url'];
             /*
              * parse json data
              */
@@ -97,7 +87,7 @@ $app->group('/paper', function () use ($app) {
             try {
                 $paper->title = $json['title'];
                 $paper->year = $json['yearmo'];
-                $paper->deserialize($arr);
+                $paper->deserialize($json);
                 $paper->save();
                 echo $paper->serialize();
             } catch (ModelException $e) {

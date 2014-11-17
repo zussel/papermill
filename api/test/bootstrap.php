@@ -50,6 +50,8 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         require __DIR__ . '/../routes/auth.php';
         require __DIR__ . '/../routes/papers.php';
 
+        require __DIR__ . '/../utils/Upload.php';
+
         $app->add(new \Slim\Middleware\ContentTypes());
         $app->add(new \JWTAuthMiddleware());
 

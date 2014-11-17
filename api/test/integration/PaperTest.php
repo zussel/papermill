@@ -8,6 +8,27 @@
 
 class PaperTest extends Slim_Framework_TestCase
 {
+    protected function mockAuthenticate($hasAuth, $auth) {
+        $middleware = $this->getMock('\JWTAuthMiddleware');
+        $middleware->expects($this->any())
+            ->method('hasAuthenticate')
+            ->will($this->returnValue($hasAuth));
+        $middleware->expects($this->any())
+            ->method('authenticate')
+            ->will($this->returnValue($auth));
+
+        $this->app->add($middleware);
+    }
+
+    protected function mockUpload() {
+        $middleware = $this->getMock('\Upload');
+        $middleware->expects($this->once())
+            ->method('upload_file')
+            ->will($this->returnCallback(function($source, $dest) {
+                copy($source, $dest);
+            }));
+    }
+
     protected function prepare_header($optionalHeader) {
         $optionalHeader['HTTP_AUTHORIZATION']  = 'Bearer ' . $this->createJWTToken(1);
         return parent::prepare_header($optionalHeader);
@@ -29,14 +50,16 @@ class PaperTest extends Slim_Framework_TestCase
 
     public function testPost_SUCCESS()
     {
-        $token = $this->createJWTToken(1);
-
         $paper = json_encode(array(
             'title' => 'Mein erstes Paper',
             'year' => 2014
         ));
 
-        $this->post('/paper', $paper);
+        $this->mockUpload();
+
+        $this->post('/paper', $paper, null, array(
+            'CONTENT-TYPE' => 'multipart/form-data'
+        ));
         $this->assertEquals(200, $this->response->status());
         $body = $this->response->body();
         var_dump($body);
