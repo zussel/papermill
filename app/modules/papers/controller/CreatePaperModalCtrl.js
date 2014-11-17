@@ -38,9 +38,7 @@ app.controller('CreatePaperModalCtrl', [
             $scope.upload = $upload.upload({
                 url: '/api/paper',
                 method: 'POST',
-                data: {
-                    paper: $scope.paper
-                },
+                data: $scope.paper,
                 file: $scope.paper.file
             }).then(function(response) {
                 console.log('successfully saved paper:');

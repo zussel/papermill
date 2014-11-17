@@ -73,10 +73,15 @@ $app->group('/paper', function () use ($app) {
             $name = uniqid();
             if (move_uploaded_file($file['tmp_name'], 'uploads/papers/' . $name) === true) {
                 $papers[] = array('url' => '/uploads/papers/' . $name, 'name' => $file['name']);
+            } else {
+                echo '{"error":"couldn\'t upload file"}';
+                return;
             }
         }
 
         $json = $app->request->post('paper');
+        $json2 = $app->request->post();
+        $body = $app->request->getBody();
 
         if ($json == null) {
             $app->response->setStatus(404);
