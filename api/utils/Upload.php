@@ -2,33 +2,27 @@
 
 class Upload
 {
-
-    private $file;
-    private $destination;
-    private $name;
-
-    public function __construct($file, $destination, $name = null) {
-        $this->file = $file;
-        $this->destination = $destination;
-        $this->name = ($name == null ? uniqid() : $name);
+    public function __construct() {
     }
 
-    public function has_error() {
-        return $this->file['error'] !== 0;
-    }
-
-    public function upload() {
-        if ($this->has_error()) {
+    public function upload($file, $destination, $name = null) {
+        if ($this->has_error($file)) {
             return false;
         }
-        if ($this->upload_file($this->file['tmp_name'], 'uploads/papers/' . $this->name) === true) {
-            return array('url' => '/uploads/papers/' . $this->name, 'name' => $this->file['name']);
+        $name = ($name === null ? uniqid() : $name);
+        if ($this->upload_file($file['tmp_name'], $destination . $name) === true) {
+            return array('url' => $destination . $name, 'name' => $file['name']);
         } else {
             return false;
         }
     }
 
-    private function upload_file($source, $destination) {
+    private function has_error($file) {
+        return $file['error'] !== 0;
+    }
+
+
+    protected function upload_file($source, $destination) {
         return move_uploaded_file($source, $destination) === true;
     }
 }

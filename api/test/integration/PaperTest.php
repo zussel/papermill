@@ -8,25 +8,15 @@
 
 class PaperTest extends Slim_Framework_TestCase
 {
-    protected function mockAuthenticate($hasAuth, $auth) {
-        $middleware = $this->getMock('\JWTAuthMiddleware');
-        $middleware->expects($this->any())
-            ->method('hasAuthenticate')
-            ->will($this->returnValue($hasAuth));
-        $middleware->expects($this->any())
-            ->method('authenticate')
-            ->will($this->returnValue($auth));
-
-        $this->app->add($middleware);
-    }
-
-    protected function mockUpload() {
-        $middleware = $this->getMock('\Upload');
-        $middleware->expects($this->once())
+    protected function mockUploadFile() {
+        $mock = $this->getMock('Upload', array('upload_file'));
+        $mock->expects($this->once())
             ->method('upload_file')
-            ->will($this->returnCallback(function($source, $dest) {
-                copy($source, $dest);
-            }));
+            ->with($this->anything(), $this->anything())
+            ->will($this->returnValue(true));
+        $this->app->uploader = function($c) use ($mock) {
+            return $mock;
+        };
     }
 
     protected function prepare_header($optionalHeader) {
@@ -55,10 +45,10 @@ class PaperTest extends Slim_Framework_TestCase
             'year' => 2014
         ));
 
-        $this->mockUpload();
+        $this->mockUploadFile();
 
         $this->post('/paper', $paper, null, array(
-            'CONTENT-TYPE' => 'multipart/form-data'
+            'HTTP_CONTENT_TYPE' => 'multipart/form-data'
         ));
         $this->assertEquals(200, $this->response->status());
         $body = $this->response->body();

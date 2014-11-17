@@ -21,7 +21,7 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
     private $testingMethods = array('get', 'post', 'patch', 'put', 'delete', 'head');
 
     private $optionalHeader = array(
-        'CONTENT_TYPE'   => 'application/json',
+//        'CONTENT_TYPE'   => 'application/json',
     );
 
     // Run for each unit test to setup our slim app environment
@@ -42,6 +42,12 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         require_once __DIR__ . '/../models/exceptions.php';
         require_once __DIR__ . '/../models/models.php';
 
+        require __DIR__ . '/../utils/Upload.php';
+
+        $app->uploader = function($c) use ($app) {
+            return new Upload();
+        };
+
         require_once __DIR__ . '/../middleware/JWTAuthMiddleware.php';
 
         require __DIR__ . '/../routes/setup.php';
@@ -49,8 +55,6 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         require __DIR__ . '/../routes/profiles.php';
         require __DIR__ . '/../routes/auth.php';
         require __DIR__ . '/../routes/papers.php';
-
-        require __DIR__ . '/../utils/Upload.php';
 
         $app->add(new \Slim\Middleware\ContentTypes());
         $app->add(new \JWTAuthMiddleware());
@@ -149,19 +153,6 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
 
         return JWT::encode($token, $key);
     }
-    /*
-    protected function mockAuthenticate($hasAuth, $auth) {
-        $middleware = $this->getMock('\JWTAuthMiddleware');
-        $middleware->expects($this->any())
-            ->method('hasAuthenticate')
-            ->will($this->returnValue($hasAuth));
-        $middleware->expects($this->any())
-            ->method('authenticate')
-            ->will($this->returnValue($auth));
-
-        $this->app->add($middleware);
-    }
-    */
 }
 
 /* End of file bootstrap.php */

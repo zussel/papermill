@@ -61,9 +61,9 @@ $app->group('/paper', function () use ($app) {
             return;
         };
 
-        $upload = new Upload($_FILES['file'], 'uploads/papers/');
+        $uploader = $app->uploader;
 
-        $uploaded = $upload->upload();
+        $uploaded = $uploader->upload($_FILES['file'], 'uploads/papers/');
         if (!$uploaded) {
             echo '{"error":"couldn\'t upload file"}';
             return;
