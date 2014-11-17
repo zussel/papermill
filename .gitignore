@@ -6,3 +6,4 @@ composer.lock
 *.sqlite
 .idea
 _intellij_phpunit_launcher.php
+api/uploads/papers
