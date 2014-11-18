@@ -1,19 +1,6 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: sascha
- * Date: 3/28/14
- * Time: 4:41 PM
- */
 
-error_reporting(-1);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-date_default_timezone_set('UTC');
-
-require_once __DIR__ . '/../vendor/autoload.php';
-
-class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
+class SlimTestEnvironment
 {
     // We support these methods for testing. These are available via
     // `this->get()` and `$this->post()`. This is accomplished with the
@@ -22,13 +9,11 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
 
     private $optionalHeader = array();
 
-    private $environment = null;
+    public function __construct() {
+        $this->init();
+    }
 
-    // Run for each unit test to setup our slim app environment
-    public function setup()
-    {
-        $this->environment = new SlimTestEnvironment();
-
+    protected function init() {
         // Initialize our own copy of the slim application
         $app = new \Slim\Slim(array(
             'version'        => '0.1.0',
@@ -44,11 +29,13 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         require_once __DIR__ . '/../models/exceptions.php';
         require_once __DIR__ . '/../models/models.php';
 
+        /*
         require __DIR__ . '/../utils/Upload.php';
 
         $app->uploader = function($c) use ($app) {
             return new Upload();
         };
+        */
 
         require_once __DIR__ . '/../middleware/JWTAuthMiddleware.php';
 
@@ -65,34 +52,13 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         $this->app = $app;
 
         $this->optionalHeader = $this->prepare_header($this->optionalHeader);
-
-        // setup db
-        ORM::configure('sqlite::memory:');
-
-        setup_db();
-
         $this->configure_database();
-    }
-
-    public function tearDown()
-    {
-        drop_db();
     }
 
     // Abstract way to make a request to SlimPHP, this allows us to mock the
     // slim environment
-    private function request($method, $path, $body = '', $query = '', $optionalHeaders = array())
+    public function request($method, $path, $body = '', $query = '', $optionalHeaders = array())
     {
-        // Capture STDOUT
-        ob_start();
-
-        $this->environment->request($method, $path, $body, $query, $optionalHeaders);
-
-        $this->request = $this->environment->request();
-        $this->response = $this->environment->response();
-
-        $this->environment->run();
-
         // Prepare a mock environment
         \Slim\Environment::mock(array_merge(array(
             'REQUEST_METHOD' => strtoupper($method),
@@ -109,61 +75,16 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         // Execute our app
         $this->app->run();
 
-        // Return the application output. Also available in `response->body()`
-        return ob_get_clean();
+        return $this->app;
     }
 
     // Implement our `get`, `post`, and other http operations
     public function __call($method, $arguments) {
         if (in_array($method, $this->testingMethods)) {
             list($path, $formVars, $query, $headers) = array_pad($arguments, 4, array());
-            return $this->environment->request($method, $path, $formVars, $query, $headers);
+            return $this->request($method, $path, $formVars, $query, $headers);
         }
         throw new \BadMethodCallException(strtoupper($method) . ' is not supported');
     }
 
-    protected function appendHeader($optionalHeader) {
-        if (!is_array($optionalHeader)) {
-            return;
-        }
-        $this->optionalHeader = array_merge($this->optionalHeader, $optionalHeader);
-    }
-
-    protected function prepare_header($optionalHeader) {
-        return $optionalHeader;
-    }
-
-    protected function configure_database() {
-        // setup db
-        $salt = openssl_random_pseudo_bytes(16);
-        $passwd = sha1('secret' . $salt);
-
-        /*
-         * insert user
-         */
-        $user = Model::factory('User')->create();
-        $user->email = 'a@a.de';
-        $user->passwd = $passwd;
-        $user->passwd_salt = $salt;
-        $user->save();
-
-        /*
-        $db = ORM::get_db();
-
-        $sql = 'INSERT INTO user (email, passwd, passwd_salt) VALUES ("a@a.de", "' + $passwd + '", "' + $salt + '")';
-        $db->exec($sql);
-        */
-    }
-
-    protected function createJWTToken($userid) {
-        $expiry = 24 * 60 * 60;
-        $key = $GLOBALS['config']['jwt-secret'];
-        $token['id'] = $userid;
-        $token['aud'] = 'papermill';
-        $token['exp'] = time() + $expiry;
-
-        return JWT::encode($token, $key);
-    }
 }
-
-/* End of file bootstrap.php */
