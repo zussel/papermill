@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('papermill').factory("AuthService", function ($q, $http, $location, $window) {
+angular.module('papermill').factory("AuthService", function ($q, $http, $window) {
     var user = {
         id: null,
         profile: null
@@ -18,17 +18,12 @@ angular.module('papermill').factory("AuthService", function ($q, $http, $locatio
             });
         },
         logout: function() {
-            $http.get('/api/auth/logout/' + user.id)
-                .success(function(data) {
+            return $http.get('/api/auth/logout/' + user.id)
+                .success(function() {
                     user.id = null;
                     user.profile = null;
                     delete $window.sessionStorage.token;
-                    $location.path('/login');
-                })
-                .error(function() {
-                    console.log('couldn\'t logout');
-                })
-
+                });
         },
         signin: function(profile) {
             return $http.post('/api/auth/signin', profile);

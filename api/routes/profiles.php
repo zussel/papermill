@@ -78,17 +78,20 @@ $app->group('/profile', function () use ($app) {
             echo '{"error": "no profile data"}';
         } else if (is_string($json)) {
             $json = json_decode($json, true);
+        } else if (!is_array($json)) {
+            // data is invalid
+            $app->response->setStatus(400);
+            echo '{"error": "invalid profile data"}';
+        }
+        /*
+         * parse json data
+         */
+        $profile = Model::factory('Profile')->create($json);
+        if (!$profile->save()) {
+            $app->response->setStatus(400);
+            echo '{"error":"couldn\'t create profile"}';
         } else {
-            /*
-             * parse json data
-             */
-            $profile = Model::factory('Profile')->create($json);
-            if (!$profile->save()) {
-                $app->response->setStatus(400);
-                echo '{"error":"couldn\'t create profile"}';
-            } else {
-                echo json_encode($profile->as_array());
-            }
+            echo json_encode($profile->as_array());
         }
     });
 

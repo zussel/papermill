@@ -8,12 +8,18 @@
 
 class PaperTest extends Slim_Framework_TestCase
 {
-    protected function mockUploadFile() {
-        $mock = $this->getMock('Upload', array('upload_file'));
+    protected function mockUploadFile($paper) {
+        $mock = $this->getMock('PaperUpload', array('upload_file', 'paper'));
+        // mock upload file function
         $mock->expects($this->once())
             ->method('upload_file')
             ->with($this->anything(), $this->anything())
             ->will($this->returnValue(true));
+        // mock get paper function
+        $mock->expects($this->once())
+            ->method('paper')
+            ->with($this->anything())
+            ->will($this->returnValue($paper));
         $this->app->uploader = function($c) use ($mock) {
             return $mock;
         };
@@ -29,10 +35,10 @@ class PaperTest extends Slim_Framework_TestCase
 
         $_FILES = array(
             'file' => array(
-                'name' => 'test.jpg',
-                'type' => 'image/jpeg',
+                'name' => 'test.txt',
+                'type' => 'text/plain',
                 'size' => 542,
-                'tmp_name' => __DIR__ . '/_files/source-test.jpg',
+                'tmp_name' => __DIR__ . '/_files/source-test.txt',
                 'error' => 0
             )
         );
@@ -42,10 +48,12 @@ class PaperTest extends Slim_Framework_TestCase
     {
         $paper = json_encode(array(
             'title' => 'Mein erstes Paper',
-            'year' => 2014
+            'year' => 2014,
+            'authors' => array(),
+            'tags' => array()
         ));
 
-        $this->mockUploadFile();
+        $this->mockUploadFile($paper);
 
         $this->post('/paper', $paper, null, array(
             'HTTP_CONTENT_TYPE' => 'multipart/form-data'
@@ -62,15 +70,17 @@ class PaperTest extends Slim_Framework_TestCase
             'url' => '/path/to/file'
         ));
 
-        $this->post('/paper', $paper);
+        $this->mockUploadFile($paper);
+
+        $this->post('/paper', $paper, null, array(
+            'HTTP_CONTENT_TYPE' => 'multipart/form-data'
+        ));
 
         $this->assertEquals(400, $this->response->status());
     }
 
     public function testGet_SUCCESS()
     {
-//        $token = $this->login('a@a.de', 'secret');
-
         $res = $this->get('/paper/1', null, null, array(
             'Content-Type' => 'application/json',
         ));
@@ -85,8 +95,7 @@ class PaperTest extends Slim_Framework_TestCase
             'Content-Type' => 'application/json'
         ));
 
-//        $this->assertEquals(404, $this->response->status());
-        $this->assertEquals(404, $this->app->response()->status());
+        $this->assertEquals(404, $this->response->status());
     }
 
     protected function configure_database() {

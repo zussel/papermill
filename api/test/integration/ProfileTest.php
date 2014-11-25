@@ -17,11 +17,11 @@ class ProfileTest extends Slim_Framework_TestCase
         ));
 
 
-        json_decode($this->post('/profile', $profile));
+        $data = json_decode($this->post('/profile', $profile, null, array(
+            'HTTP_CONTENT_TYPE' => 'application/json'
+        )), true);
 
         $this->assertEquals(200, $this->response->status());
-
-        $data = json_decode($this->response->getBody(), true);
         $this->assertNotNull($data);
         $this->assertGreaterThan(0, $data['id']);
     }
@@ -34,11 +34,11 @@ class ProfileTest extends Slim_Framework_TestCase
             'active' => 0
         ));
 
-        $this->post('/profile', $profile);
+        $data = json_decode($this->post('/profile', $profile, null, array(
+            'HTTP_CONTENT_TYPE' => 'application/json'
+        )), true);
 
         $this->assertEquals(200, $this->response->status());
-
-        $data = json_decode($this->response->getBody(), true);
         $this->assertNotNull($data);
         $this->assertGreaterThan(0, $data['id']);
     }

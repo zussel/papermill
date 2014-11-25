@@ -22,13 +22,9 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
 
     private $optionalHeader = array();
 
-    private $environment = null;
-
     // Run for each unit test to setup our slim app environment
     public function setup()
     {
-        $this->environment = new SlimTestEnvironment();
-
         // Initialize our own copy of the slim application
         $app = new \Slim\Slim(array(
             'version'        => '0.1.0',
@@ -44,10 +40,10 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         require_once __DIR__ . '/../models/exceptions.php';
         require_once __DIR__ . '/../models/models.php';
 
-        require __DIR__ . '/../utils/Upload.php';
+        require_once __DIR__ . '/../utils/PaperUpload.php';
 
         $app->uploader = function($c) use ($app) {
-            return new Upload();
+            return new PaperUpload();
         };
 
         require_once __DIR__ . '/../middleware/JWTAuthMiddleware.php';
@@ -86,13 +82,6 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         // Capture STDOUT
         ob_start();
 
-        $this->environment->request($method, $path, $body, $query, $optionalHeaders);
-
-        $this->request = $this->environment->request();
-        $this->response = $this->environment->response();
-
-        $this->environment->run();
-
         // Prepare a mock environment
         \Slim\Environment::mock(array_merge(array(
             'REQUEST_METHOD' => strtoupper($method),
@@ -117,7 +106,7 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
     public function __call($method, $arguments) {
         if (in_array($method, $this->testingMethods)) {
             list($path, $formVars, $query, $headers) = array_pad($arguments, 4, array());
-            return $this->environment->request($method, $path, $formVars, $query, $headers);
+            return $this->request($method, $path, $formVars, $query, $headers);
         }
         throw new \BadMethodCallException(strtoupper($method) . ' is not supported');
     }

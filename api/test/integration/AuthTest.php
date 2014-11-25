@@ -21,7 +21,9 @@ class AuthTest extends Slim_Framework_TestCase
             )
         );
 
-        $this->post('/auth/signin', json_encode($user_profile));
+        $this->post('/auth/signin', json_encode($user_profile), null, array(
+            'HTTP_CONTENT_TYPE' => 'application/json'
+        ));
 
         $this->assertEquals(200, $this->response->status());
 
@@ -67,7 +69,9 @@ class AuthTest extends Slim_Framework_TestCase
             'passwd' => 'secret'
         ));
 
-        $this->post('/auth/login', $json);
+        $this->post('/auth/login', $json, null, array(
+            'HTTP_CONTENT_TYPE' => 'application/json'
+        ));
 
         $token = json_decode($this->response->getBody());
 
@@ -86,7 +90,9 @@ class AuthTest extends Slim_Framework_TestCase
             'passwd' => 'wrong_secret'
         ));
 
-        $this->post('/auth/login', $json);
+        $this->post('/auth/login', $json, null, array(
+            'HTTP_CONTENT_TYPE' => 'application/json'
+        ));
 
         json_decode($this->response->getBody());
 
@@ -103,7 +109,9 @@ class AuthTest extends Slim_Framework_TestCase
             'email' => 'a@a.de'
         ));
 
-        $this->post('/auth/login', $json);
+        $this->post('/auth/login', $json, null, array(
+            'HTTP_CONTENT_TYPE' => 'application/json'
+        ));
 
         json_decode($this->response->getBody());
 
@@ -120,7 +128,9 @@ class AuthTest extends Slim_Framework_TestCase
             'passwd' => 'secret'
         ));
 
-        $this->post('/auth/login', $json);
+        $this->post('/auth/login', $json, null, array(
+            'HTTP_CONTENT_TYPE' => 'application/json'
+        ));
 
         $this->assertEquals(400, $this->response->status());
 
@@ -136,7 +146,9 @@ class AuthTest extends Slim_Framework_TestCase
             'passwd' => 'secret'
         ));
 
-        $this->post('/auth/login', $json);
+        $this->post('/auth/login', $json, null, array(
+            'HTTP_CONTENT_TYPE' => 'application/json'
+        ));
 
         $this->assertEquals(400, $this->response->status());
 

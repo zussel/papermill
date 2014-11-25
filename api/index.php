@@ -3,7 +3,7 @@ require 'vendor/autoload.php';
 
 require 'middleware/JWTAuthMiddleware.php';
 
-require_once __DIR__ . '/utils/Upload.php';
+require_once __DIR__ . '/utils/PaperUpload.php';
 
 $app = new \Slim\Slim();
 $app->add(new \Slim\Middleware\ContentTypes());
@@ -11,7 +11,7 @@ $app->add(new \JWTAuthMiddleware());
 $app->config('debug', true);
 
 $app->uploader = function($c) use ($app) {
-    return new Upload();
+    return new PaperUpload();
 };
 
 $app->contentType('application/json; charset=utf-8');

@@ -1,6 +1,6 @@
 <?php
 
-class Upload
+class PaperUpload
 {
     public function __construct() {
     }
@@ -15,6 +15,10 @@ class Upload
         } else {
             return false;
         }
+    }
+
+    public function paper($request) {
+        return $request->post('paper');
     }
 
     private function has_error($file) {

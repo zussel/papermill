@@ -69,42 +69,66 @@ $app->group('/paper', function () use ($app) {
             return;
         }
 
-        $json = $app->request->post('paper');
-        $json2 = $app->request->post();
-        $body = $app->request->getBody();
+        $json = $uploader->paper($app->request);
 
         if ($json == null) {
             $app->response->setStatus(404);
             echo 'data null';
         } else if (is_string($json)) {
             $json = json_decode($json, true);
-        } else {
-            $json['url'] = $uploaded['url'];
-            /*
-             * parse json data
-             */
-            $paper = Model::factory('Paper')->create();
-            try {
-                $paper->title = $json['title'];
-                $paper->year = $json['yearmo'];
-                $paper->deserialize($json);
-                $paper->save();
-                echo $paper->serialize();
-            } catch (ModelException $e) {
-                $app->response->setStatus(400);
-                echo '{"error":"'.$e->getMessage().'"}';
-            }
-            /*
-             * validate authors
-             */
-            foreach($paper->authors as $author) {
-                if ($author['id'] === null) {
-                    // new author insert on db
-                    $newAuthor = Model::factory('Author')->create();
+        } else if (!is_array($json)) {
+            $app->response->setStatus(400);
+            echo '{"error": "invalid paper data"}';
+        }
+        // validate data
+        if (!isset($json['title'])) {
+            $app->response->setStatus(400);
+            echo '{"error": "missing title"}';
+        } else if (!isset($json['year'])) {
+            $app->response->setStatus(400);
+            echo '{"error": "missing year"}';
+        } else if (!isset($json['authors']) || !is_array($json['authors'])) {
+            $app->response->setStatus(400);
+            echo '{"error": "missing or invalid authors"}';
+        } else if (!isset($json['tags']) || !is_array($json['tags'])) {
+            $app->response->setStatus(400);
+            echo '{"error": "missing or invalid tags"}';
+        }
+        /*
+         * set file data
+         */
+        $json['url'] = $uploaded['url'];
+        $json['size'] = $uploaded['size'];
+        /*
+         * parse json data
+         */
+        $paper = Model::factory('Paper')->create();
 
-                }
+        $paper->title = $json['title'];
+        $paper->year = $json['year'];
+        $paper->save();
+
+        /*
+         * validate authors
+         */
+        foreach($json['authors'] as $author) {
+            if ($author['id'] === null) {
+                // new author insert on db
+                $newAuthor = Model::factory('Author')->create();
             }
         }
+
+        /*
+         * validate tags
+         */
+        foreach($json['tags'] as $tag) {
+            if ($tag['id'] === null) {
+                // new tag insert on db
+                $newTag = Model::factory('Tag')->create();
+            }
+        }
+
+        echo json_encode($paper->as_array());
     });
 
     /*

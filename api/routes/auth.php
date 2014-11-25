@@ -22,7 +22,13 @@ $app->group('/auth', function () use ($app) {
             echo '{"error": "no credentials"}';
         } else if (is_string($json)) {
             $json = json_decode($json, true);
-        } else if (!isset($json['email'])) {
+        } else if (!is_array($json)) {
+            // data is invalid
+            $app->response->setStatus(400);
+            echo '{"error": "invalid profile data"}';
+        }
+
+        if (!isset($json['email'])) {
             $app->response->setStatus(400);
             echo '{"error": "missing email"}';
         } else if (!isset($json['passwd'])) {
@@ -83,10 +89,16 @@ $app->group('/auth', function () use ($app) {
             echo '{"error": "no credentials"}';
         } else if (is_string($json)) {
             $json = json_decode($json, true);
-            /*
-             * check if user exists
-             */
-        } else if (!isset($json['user'])) {
+        } else if (!is_array($json)) {
+            // data is invalid
+            $app->response->setStatus(400);
+            echo '{"error": "invalid profile data"}';
+        }
+
+        /*
+         * check if user exists
+         */
+        if (!isset($json['user'])) {
             $app->response->setStatus(400);
             echo '{"error": "missing user data"}';
         } else if (!isset($json['profile'])) {
@@ -155,6 +167,7 @@ $app->group('/auth', function () use ($app) {
      * Logout the given user
      */
     $app->get('/logout/:id', function ($id) use ($app) {
-
+        // unset user in app
+        echo "logged out";
     });
 });

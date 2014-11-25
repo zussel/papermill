@@ -20,7 +20,11 @@ app.controller('UserCtrl', ['$scope', '$location', 'AuthService', function($scop
     };
 
     $scope.logout = function() {
-        AuthService.logout();
+        AuthService.logout().then(function() {
+            $location.path('/login');
+        }, function() {
+            console.log('couldn\'t logout');
+        });
     };
 
     $scope.user = function() {
