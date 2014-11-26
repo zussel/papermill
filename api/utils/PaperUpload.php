@@ -11,7 +11,11 @@ class PaperUpload
         }
         $name = ($name === null ? uniqid() : $name);
         if ($this->upload_file($file['tmp_name'], $destination . $name) === true) {
-            return array('url' => $destination . $name, 'name' => $file['name']);
+            return array(
+                'url' => $destination . $name,
+                'name' => $file['name'],
+                'size' => $file['size'],
+            );
         } else {
             return false;
         }

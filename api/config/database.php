@@ -54,13 +54,13 @@ function setup_db() {
 
     $db->exec('CREATE TABLE IF NOT EXISTS paper (
                id INTEGER PRIMARY KEY,
-               created VARCHAR(32),
-               year INTEGER,
                title VARCHAR(256),
-               name VARCHAR(256),
+               year INTEGER,
+               filename VARCHAR(256),
                size INTEGER,
                type VARCHAR(16),
-               extension VARCHAR(16),
+               created VARCHAR(32),
+               updated VARCHAR(32),
                url VARCHAR(256));');
 
     $db->exec('CREATE TABLE IF NOT EXISTS paper_user (

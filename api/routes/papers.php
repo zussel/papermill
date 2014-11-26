@@ -26,9 +26,10 @@ $app->group('/paper', function () use ($app) {
         $app->response()->header("Content-Type", "application/json");
         $paper = Model::factory('Paper')->find_one($id);
         if ($paper != null) {
-            echo $paper->serialize();
+            echo json_encode($paper->as_array());
         } else {
             $app->response->setStatus(404);
+            echo '{"error":"unknown paper with id "'.$id.'}';
         }
     });
 
@@ -93,42 +94,52 @@ $app->group('/paper', function () use ($app) {
         } else if (!isset($json['tags']) || !is_array($json['tags'])) {
             $app->response->setStatus(400);
             echo '{"error": "missing or invalid tags"}';
-        }
-        /*
-         * set file data
-         */
-        $json['url'] = $uploaded['url'];
-        $json['size'] = $uploaded['size'];
-        /*
-         * parse json data
-         */
-        $paper = Model::factory('Paper')->create();
+        } else {
+            /*
+             * parse json data
+             */
+            $paper = Model::factory('Paper')->create();
 
-        $paper->title = $json['title'];
-        $paper->year = $json['year'];
-        $paper->save();
+            $paper->title = $json['title'];
+            $paper->year = $json['year'];
+            $paper->size = $uploaded['size'];
+            $paper->url = $uploaded['url'];
+            $paper->filename = $uploaded['name'];
+            $now = date('now');
+            $paper->created = $now;
+            $paper->updated = $now;
 
-        /*
-         * validate authors
-         */
-        foreach($json['authors'] as $author) {
-            if ($author['id'] === null) {
-                // new author insert on db
-                $newAuthor = Model::factory('Author')->create();
+            $paper->save();
+
+            /*
+             * validate authors
+             */
+            foreach ($json['authors'] as $author) {
+                if ($author['id'] === null) {
+                    // new author insert on db
+                    $newAuthor = Model::factory('Profile')->create($author);
+                    // Todo: author controller to provide a create function
+                    $newAuthor->save();
+                    $author_paper = Model::factory('ProfilePaper')->create();
+                    $author_paper->profile_id = $newAuthor->id;
+                    $author_paper->paper_id = $paper->id;
+                    $author_paper->save();
+                }
             }
-        }
 
-        /*
-         * validate tags
-         */
-        foreach($json['tags'] as $tag) {
-            if ($tag['id'] === null) {
-                // new tag insert on db
-                $newTag = Model::factory('Tag')->create();
+            /*
+             * validate tags
+             */
+            foreach ($json['tags'] as $tag) {
+                if ($tag['id'] === null) {
+                    // new tag insert on db
+                    $newTag = Model::factory('Tag')->create($tag);
+                    $newTag->save();
+                }
             }
-        }
 
-        echo json_encode($paper->as_array());
+            echo json_encode($paper->as_array());
+        }
     });
 
     /*
