@@ -1,5 +1,6 @@
 <?php
 
+
 $app->group('/paper', function () use ($app) {
 
     /*
@@ -100,10 +101,11 @@ $app->group('/paper', function () use ($app) {
              */
             $paper = Model::factory('Paper')->create();
 
+            $json = array_merge($json, $uploaded);
             $paper->title = $json['title'];
             $paper->year = $json['year'];
-            $paper->size = $uploaded['size'];
-            $paper->url = $uploaded['url'];
+            $paper->size = $json['size'];
+            $paper->url = $json['url'];
             $paper->filename = $uploaded['name'];
             $now = date('now');
             $paper->created = $now;
