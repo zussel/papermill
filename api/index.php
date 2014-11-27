@@ -26,6 +26,7 @@ $GLOBALS['config'] = include __DIR__ . '/config/config.php';
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/models/exceptions.php';
 require_once __DIR__ . '/models/models.php';
+require_once __DIR__ . '/controller/paper.php';
 require_once __DIR__ . '/routes/routes.php';
 
 $app->run();

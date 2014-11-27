@@ -19,7 +19,7 @@ class ProfilePaper extends Model {}
 
 class Tag extends Model {}
 
-class PaperTag extends Model {}
+class TagPaper extends Model {}
 
 class TagUser extends Model {}
 

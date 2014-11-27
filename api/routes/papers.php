@@ -1,6 +1,5 @@
 <?php
 
-
 $app->group('/paper', function () use ($app) {
 
     /*
@@ -83,63 +82,23 @@ $app->group('/paper', function () use ($app) {
             echo '{"error": "invalid paper data"}';
         }
         // validate data
-        if (!isset($json['title'])) {
+        $ret = paper_is_valid_json($json);
+        if ($ret !== true) {
             $app->response->setStatus(400);
-            echo '{"error": "missing title"}';
-        } else if (!isset($json['year'])) {
-            $app->response->setStatus(400);
-            echo '{"error": "missing year"}';
-        } else if (!isset($json['authors']) || !is_array($json['authors'])) {
-            $app->response->setStatus(400);
-            echo '{"error": "missing or invalid authors"}';
-        } else if (!isset($json['tags']) || !is_array($json['tags'])) {
-            $app->response->setStatus(400);
-            echo '{"error": "missing or invalid tags"}';
+            echo '{"error": "'.$ret.'"}';
         } else {
-            /*
-             * parse json data
-             */
-            $paper = Model::factory('Paper')->create();
+            $paper = paper_create($json);
 
-            $json = array_merge($json, $uploaded);
-            $paper->title = $json['title'];
-            $paper->year = $json['year'];
-            $paper->size = $json['size'];
-            $paper->url = $json['url'];
-            $paper->filename = $uploaded['name'];
-            $now = date('now');
-            $paper->created = $now;
-            $paper->updated = $now;
-
-            $paper->save();
-
-            /*
-             * validate authors
-             */
             foreach ($json['authors'] as $author) {
                 if ($author['id'] === null) {
-                    // new author insert on db
-                    $newAuthor = Model::factory('Profile')->create($author);
-                    // Todo: author controller to provide a create function
-                    $newAuthor->save();
-                    $author_paper = Model::factory('ProfilePaper')->create();
-                    $author_paper->profile_id = $newAuthor->id;
-                    $author_paper->paper_id = $paper->id;
-                    $author_paper->save();
+                    paper_add_author($paper, $author);
                 }
             }
-
-            /*
-             * validate tags
-             */
             foreach ($json['tags'] as $tag) {
                 if ($tag['id'] === null) {
-                    // new tag insert on db
-                    $newTag = Model::factory('Tag')->create($tag);
-                    $newTag->save();
+                    paper_add_tag($paper, $tag);
                 }
             }
-
             echo json_encode($paper->as_array());
         }
     });
