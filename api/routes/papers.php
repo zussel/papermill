@@ -81,6 +81,7 @@ $app->group('/paper', function () use ($app) {
             $app->response->setStatus(400);
             echo '{"error": "invalid paper data"}';
         }
+        $json = array_merge($json, $uploaded);
         // validate data
         $ret = paper_is_valid_json($json);
         if ($ret !== true) {

@@ -38,6 +38,7 @@ class Slim_Framework_TestCase extends PHPUnit_Framework_TestCase
         // Include our core application file
         require_once __DIR__ . '/../config/database.php';
         require_once __DIR__ . '/../models/exceptions.php';
+        require_once __DIR__ . '/../controller/paper.php';
         require_once __DIR__ . '/../models/models.php';
 
         require_once __DIR__ . '/../utils/PaperUpload.php';

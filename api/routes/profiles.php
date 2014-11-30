@@ -16,12 +16,7 @@ $app->group('/profile', function () use ($app) {
         $profiles = Model::factory('Profile')
             ->order_by_asc("last_name")
             ->find_many();
-
-        $profiles = array_map(function($a) {
-                $arr = $a->serialize();
-                return $arr; },
-            $profiles);
-        echo json_encode($profiles);
+        echo json_encode($profiles->as_array());
     });
 
     /*
